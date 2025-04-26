@@ -9,15 +9,21 @@ import About from './pages/About.jsx'
 import LoginPage from "./pages/LoginPage.jsx";
 import ProfilePage from "./pages/ProfilePage.jsx";
 import SignUpPage from "./pages/SignUpPage.jsx";
+import Shop from "./pages/Shop.jsx";
+import Product from "./pages/AdminPage/ProductPage.jsx";
 import { useAuthStore } from "./store/useAuthStore.js";
 import { Navigate } from "react-router-dom";
 import { Toaster } from "react-hot-toast";
+import {useThemeStore} from "./store/useThemeStore.js";
+
 
  // Import your Service page
 
 const App = () => {
   const { authUser, checkAuth, isCheckingAuth, onlineUsers } = useAuthStore();
+const { theme } = useThemeStore();
   return (
+      <div data-theme={theme} >
     <Router>
       <Header />
       
@@ -27,12 +33,12 @@ const App = () => {
         <Route path="/about" element={<About />} /> {/* Home Route */}
         <Route path="/service" element={<Service />} /> {/* Service Route */}
         <Route path="/projects" element={<Projects />} /> {/* Project Route */}
-        <Route path="/shop" element={<Shop />} /> {/* Project Route */}
         <Route path="/profile" element={authUser ? <ProfilePage /> : <Navigate to="/login" />} />
         <Route path="/signup" element={!authUser ? <SignUpPage /> : <Navigate to="/" />} />
         <Route path="/login" element={!authUser ? <LoginPage /> : <Navigate to="/" />} />
-        
+        <Route path="/shop" element= {<Shop />}/>
         <Route path="/contact" element={<Contact />} /> {/* Contact Route */}
+        <Route path="/products" element={<Product/>}/>
 
 
         
@@ -41,6 +47,7 @@ const App = () => {
       <Toaster />
       <Footer />
     </Router>
+    </div>
     
   );
 };

@@ -41,15 +41,30 @@ const Header = () => {
           <Link to="/about" className="hover:text-green-600">About</Link>
           <Link to="/service" className="hover:text-green-600">Services</Link>
           <Link to="/projects" className="hover:text-green-600">Projects</Link>
-          <Link to="/shop" className="hover:text-green-600">Shop</Link>
+          {authUser?.role === "admin" ? (
+            <Link to="/products" className="hover:text-green-600">Products</Link> // Show Products for admin
+          ) : (
+            <Link to="/shop" className="hover:text-green-600">Shop</Link> // Show Shop for non-admin users
+          )}
           <Link to="/contact" className="hover:text-green-600">Contact</Link>
         </nav>
         <div className="flex items-center space-x-4">
           <div className="relative">
-            <input type="text" placeholder="Search..." className="border rounded-full px-4 py-1 w-40 md:w-60 focus:outline-none focus:ring-2 focus:ring-green-500" />
-            <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-green-600"><FaSearch size={16} /></button>
+            <input
+              type="text"
+              placeholder="Search..."
+              className="border rounded-full px-4 py-1 w-40 md:w-60 focus:outline-none focus:ring-2 focus:ring-green-500"
+            />
+            <button className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-700 hover:text-green-600">
+              <FaSearch size={16} />
+            </button>
           </div>
-          <button className="text-gray-700 hover:text-green-600"><FaShoppingCart size={20} /></button>
+          {/* Show Cart only for non-admin users */}
+          {authUser?.role !== "admin" && (
+            <button className="text-gray-700 hover:text-green-600">
+              <FaShoppingCart size={20} />
+            </button>
+          )}
           <button
             className="text-gray-700 hover:text-green-600"
             onClick={handleUserClick} // Handle user click

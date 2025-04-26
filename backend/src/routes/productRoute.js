@@ -5,9 +5,8 @@ import { protectRoute, adminProtect } from "../middleware/auth.middleware.js";
 const router = express.Router();
 
 // Public route to get all products
+console.log("Product route loaded");
 router.get("/", getProducts);
-
-// Admin-only route to create a product
-router.post("/create-product", protectRoute, adminProtect, createProduct);
+router.post("/", protectRoute, adminProtect, createProduct);
 
 export default router;
