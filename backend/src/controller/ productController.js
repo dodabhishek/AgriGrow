@@ -1,4 +1,5 @@
 import Product from "../models/product.model.js";
+import productCloudinary from "../lib/productCloudinary.js"; // Import Cloudinary configuration
 
 export const getProducts = async (req, res) => {
   try {
@@ -11,18 +12,34 @@ export const getProducts = async (req, res) => {
 };
 
 export const createProduct = async (req, res) => {
-  try {
-    const { name, description, price, imageUrl, brand } = req.body;
+  console.log("Create product route hit");
+  console.log("Request body:", req.body);
 
-    if (!name || !description || !price  || !brand) {
+  try {
+    const { name, description, price, brand, image } = req.body;
+
+    // Check if all required fields are provided
+    if (!name || !description || !price || !brand) {
       return res.status(400).json({ message: "All fields are required" });
     }
 
+    let imageUrl = null;
+
+    // Upload image to Cloudinary if the image is provided
+    if (image) {
+      const uploadResponse = await productCloudinary.uploader.upload(image, {
+        folder: "products", // Specify the folder in Cloudinary
+      });
+      console.log("Upload response:", uploadResponse);
+      imageUrl = uploadResponse.secure_url; // Use the secure URL from Cloudinary
+    }
+
+    // Create the product in the database
     const product = await Product.create({
       name,
       description,
       price,
-      imageUrl,
+      imageUrl, // Only set imageUrl if the image was uploaded
       brand,
     });
 

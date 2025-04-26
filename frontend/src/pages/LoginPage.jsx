@@ -9,29 +9,38 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login, isLoggingIn } = useAuthStore();
+  const [expertFormData, setExpertFormData] = useState({
+    email: "",
+    password: "",
+  });
+  const { login, isLoggingIn,expertLogin } = useAuthStore();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     login(formData);
   };
 
+  const handleExpertSubmit = async (e) => {
+    e.preventDefault();
+    expertLogin(expertFormData); // Use the same login function for experts
+  };
+
   return (
-    <div className="h-screen grid lg:grid-cols-2">
-      {/* Left Side - Form */}
-      <div className="flex flex-col justify-center items-center p-6 sm:p-12">
+    <div className="h-screen grid lg:grid-cols-2 bg-gradient-to-r from-blue-50 to-gray-100">
+      {/* Left Side - User Login */}
+      <div className="flex flex-col justify-center items-center p-8 sm:p-12 bg-white shadow-lg rounded-lg">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
           <div className="text-center mb-8">
             <div className="flex flex-col items-center gap-2 group">
               <div
-                className="w-12 h-12 rounded-xl bg-primary/10 flex items-center justify-center group-hover:bg-primary/20
+                className="w-12 h-12 rounded-xl bg-blue-100 flex items-center justify-center group-hover:bg-blue-200
               transition-colors"
               >
-                <MessageSquare className="w-6 h-6 text-primary" />
+                <MessageSquare className="w-6 h-6 text-blue-600" />
               </div>
-              <h1 className="text-2xl font-bold mt-2">Welcome Back</h1>
-              <p className="text-base-content/60">Sign in to your account</p>
+              <h1 className="text-3xl font-bold mt-2 text-gray-800">Welcome Back</h1>
+              <p className="text-gray-500">Sign in to your account</p>
             </div>
           </div>
 
@@ -39,16 +48,16 @@ const LoginPage = () => {
           <form onSubmit={handleSubmit} className="space-y-6">
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Email</span>
+                <span className="label-text font-medium text-gray-700">Email</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Mail className="h-5 w-5 text-base-content/40" />
+                  <Mail className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
                   type="email"
-                  className={`input input-bordered w-full pl-10`}
-                  placeholder="you@example.com"
+                  className="input input-bordered w-full pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500"
+                  placeholder="you@gmail.com"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                 />
@@ -57,15 +66,15 @@ const LoginPage = () => {
 
             <div className="form-control">
               <label className="label">
-                <span className="label-text font-medium">Password</span>
+                <span className="label-text font-medium text-gray-700">Password</span>
               </label>
               <div className="relative">
                 <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                  <Lock className="h-5 w-5 text-base-content/40" />
+                  <Lock className="h-5 w-5 text-gray-400" />
                 </div>
                 <input
                   type={showPassword ? "text" : "password"}
-                  className={`input input-bordered w-full pl-10`}
+                  className="input input-bordered w-full pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-blue-500"
                   placeholder="••••••••"
                   value={formData.password}
                   onChange={(e) => setFormData({ ...formData, password: e.target.value })}
@@ -76,15 +85,19 @@ const LoginPage = () => {
                   onClick={() => setShowPassword(!showPassword)}
                 >
                   {showPassword ? (
-                    <EyeOff className="h-5 w-5 text-base-content/40" />
+                    <EyeOff className="h-5 w-5 text-gray-400" />
                   ) : (
-                    <Eye className="h-5 w-5 text-base-content/40" />
+                    <Eye className="h-5 w-5 text-gray-400" />
                   )}
                 </button>
               </div>
             </div>
 
-            <button type="submit" className="btn btn-primary w-full" disabled={isLoggingIn}>
+            <button
+              type="submit"
+              className="btn btn-primary w-full bg-blue-600 text-white hover:bg-blue-700 rounded-lg py-2 transition-all"
+              disabled={isLoggingIn}
+            >
               {isLoggingIn ? (
                 <>
                   <Loader2 className="h-5 w-5 animate-spin" />
@@ -97,9 +110,9 @@ const LoginPage = () => {
           </form>
 
           <div className="text-center">
-            <p className="text-base-content/60">
+            <p className="text-gray-500">
               Don&apos;t have an account?{" "}
-              <Link to="/signup" className="link link-primary">
+              <Link to="/signup" className="text-blue-600 hover:underline">
                 Create account
               </Link>
             </p>
@@ -107,9 +120,91 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Right Side - Image/Pattern */}
-    
+      {/* Right Side - Expert Login */}
+      <div className="flex flex-col justify-center items-center p-8 sm:p-12 bg-gray-50 shadow-lg rounded-lg">
+        <div className="w-full max-w-md space-y-8">
+          {/* Logo */}
+          <div className="text-center mb-8">
+            <div className="flex flex-col items-center gap-2 group">
+              <div
+                className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200
+              transition-colors"
+              >
+                <MessageSquare className="w-6 h-6 text-green-600" />
+              </div>
+              <h1 className="text-3xl font-bold mt-2 text-gray-800">Hello Expert</h1>
+              <p className="text-gray-500">Welcome back</p>
+            </div>
+          </div>
+
+          {/* Form */}
+          <form onSubmit={handleExpertSubmit} className="space-y-6">
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">Email</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Mail className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type="email"
+                  className="input input-bordered w-full pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-green-500"
+                  placeholder="expert@gmail.com"
+                  value={expertFormData.email}
+                  onChange={(e) => setExpertFormData({ ...expertFormData, email: e.target.value })}
+                />
+              </div>
+            </div>
+
+            <div className="form-control">
+              <label className="label">
+                <span className="label-text font-medium text-gray-700">Password</span>
+              </label>
+              <div className="relative">
+                <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
+                  <Lock className="h-5 w-5 text-gray-400" />
+                </div>
+                <input
+                  type={showPassword ? "text" : "password"}
+                  className="input input-bordered w-full pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-green-500"
+                  placeholder="••••••••"
+                  value={expertFormData.password}
+                  onChange={(e) => setExpertFormData({ ...expertFormData, password: e.target.value })}
+                />
+                <button
+                  type="button"
+                  className="absolute inset-y-0 right-0 pr-3 flex items-center"
+                  onClick={() => setShowPassword(!showPassword)}
+                >
+                  {showPassword ? (
+                    <EyeOff className="h-5 w-5 text-gray-400" />
+                  ) : (
+                    <Eye className="h-5 w-5 text-gray-400" />
+                  )}
+                </button>
+              </div>
+            </div>
+
+            <button
+              type="submit"
+              className="btn btn-primary w-full bg-green-600 text-white hover:bg-green-700 rounded-lg py-2 transition-all"
+              disabled={isLoggingIn}
+            >
+              {isLoggingIn ? (
+                <>
+                  <Loader2 className="h-5 w-5 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Sign in"
+              )}
+            </button>
+          </form>
+        </div>
+      </div>
     </div>
   );
 };
+
 export default LoginPage;
