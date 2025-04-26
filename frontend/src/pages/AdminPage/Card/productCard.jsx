@@ -1,51 +1,49 @@
-import React from "react";
 import { useAuthStore } from "../../../store/useAuthStore";
+import { axiosInstance } from "../../../lib/axios";
 
-const Card = ({ name, description, price, imageUrl }) => {
-  const { authUser } = useAuthStore();
-  const isAdmin = authUser && authUser.role === "admin";
+const Card = ({ name, description, price, imageUrl, productId }) => {
+  const { authUser } = useAuthStore(); // Get the logged-in user
+  const fallbackImage = "/images/Basket.jpg";
+
+  const handleAddToCart = async () => {
+    try {
+      const response = await axiosInstance.post("/cart", {
+        userId: authUser._id, // Pass the logged-in user's ID
+        productId, // Pass the product ID
+      });
+      console.log(response.data.message); // Log success message
+    } catch (error) {
+      console.error("Error adding product to cart:", error.message);
+    }
+  };
+
+  const handleEditProduct = () => {
+    console.log(`Edit product with ID: ${productId}`); // Placeholder for edit functionality
+    // Add your edit logic here (e.g., open a modal to edit the product)
+  };
 
   return (
-    <div className="relative flex w-80 flex-col rounded-xl bg-white bg-clip-border text-gray-700 shadow-md">
-      {/* Product Image */}
-      <div className="relative mx-4 -mt-6 h-40 overflow-hidden rounded-xl bg-gray-200">
-        {imageUrl ? (
-          <img
-            src={imageUrl}
-            alt={name}
-            className="h-full w-full object-cover"
-          />
-        ) : (
-          <div className="flex items-center justify-center h-full text-gray-500">
-            No Image Available
-          </div>
-        )}
-      </div>
-      <div className="p-6">
-        <h5 className="mb-2 block font-sans text-xl font-semibold leading-snug tracking-normal text-blue-gray-900 antialiased">
-          {name}
-        </h5>
-        <p className="block font-sans text-base font-light leading-relaxed text-inherit antialiased">
-          {description}
-        </p>
-        <p className="block font-sans text-lg font-bold leading-relaxed text-green-600 antialiased">
-          ${price}
-        </p>
-      </div>
-      <div className="p-6 pt-0">
-        {isAdmin ? (
+    <div className="bg-white shadow-md rounded-lg p-4">
+      <img
+        src={imageUrl || fallbackImage}
+        alt={name}
+        className="w-full h-48 object-cover rounded-t-lg"
+      />
+      <h3 className="text-lg font-bold mt-2">{name}</h3>
+      <p className="text-gray-600">{description}</p>
+      <p className="text-gray-800 font-semibold mt-2">${price}</p>
+      <div className="flex justify-between mt-4">
+        {authUser?.role === "admin" ? (
           <button
-            data-ripple-light="true"
-            type="button"
-            className="select-none rounded-lg bg-blue-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-blue-500/20 transition-all hover:shadow-lg hover:shadow-blue-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            onClick={handleEditProduct}
+            className="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition-colors"
           >
-            View Details
+            Edit
           </button>
         ) : (
           <button
-            data-ripple-light="true"
-            type="button"
-            className="select-none rounded-lg bg-green-500 py-3 px-6 text-center align-middle font-sans text-xs font-bold uppercase text-white shadow-md shadow-green-500/20 transition-all hover:shadow-lg hover:shadow-green-500/40 focus:opacity-[0.85] focus:shadow-none active:opacity-[0.85] active:shadow-none disabled:pointer-events-none disabled:opacity-50 disabled:shadow-none"
+            onClick={handleAddToCart}
+            className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
           >
             Add to Cart
           </button>
