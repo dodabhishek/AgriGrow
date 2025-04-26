@@ -20,12 +20,23 @@ const userSchema = new mongoose.Schema(
       type: String,
       default: "",
     },
-    role:{
+    role: {
       type: String,
       enum: ["user", "admin"],
       default: "user",
-      
-    }
+    },
+    cart: [
+      {
+        productId: {
+          type: mongoose.Schema.Types.ObjectId,
+          ref: "Product", // Reference to the Product model
+        },
+        quantity: {
+          type: Number,
+          default: 1, // Default quantity is 1
+        },
+      },
+    ],
   },
   { timestamps: true }
 );

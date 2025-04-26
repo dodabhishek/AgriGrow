@@ -7,7 +7,7 @@ import { useAuthStore } from "../../store/useAuthStore.js"; // Import auth store
 const ProductPage = () => {
   const [products, setProducts] = useState([]); // Ensure initial state is an array
   const [showAddProductModal, setShowAddProductModal] = useState(false); // State for modal visibility
-  const [newProduct, setNewProduct] = useState({ name: "", description: "", price: "", brand: "", image: null }); // Added brand to state
+  const [newProduct, setNewProduct] = useState({ name: "", description: "", price: "", image: null }); // Removed brand from state
   const { authUser } = useAuthStore(); // Get the logged-in user
 
   // Fetch products on component mount
@@ -44,19 +44,27 @@ const ProductPage = () => {
     };
   };
 
+  // Open the Add Product Modal and set the brand as the user's first name
+  const openAddProductModal = () => {
+    const firstName = authUser?.name?.split(" ")[0] || ""; // Extract the first name of the user
+    setNewProduct({ name: "", description: "", price: "", brand: firstName, image: null }); // Automatically set the brand
+    setShowAddProductModal(true);
+  };
+
   // Handle adding a new product
   const handleAddProduct = async () => {
-    if (!newProduct.name || !newProduct.description || !newProduct.price || !newProduct.brand) {
+    if (!newProduct.name || !newProduct.description || !newProduct.price) {
       toast.error("All fields are required");
       return;
     }
 
     try {
-      const res = await axiosInstance.post("/products/", newProduct); // Send product data to backend
+      const productData = { ...newProduct, brand: authUser?.name?.split(" ")[0] || "" }; // Add brand dynamically
+      const res = await axiosInstance.post("/products/", productData); // Send product data to backend
       setProducts([...products, res.data.product]); // Add the new product to the list
       toast.success("Product added successfully");
       setShowAddProductModal(false); // Close the modal
-      setNewProduct({ name: "", description: "", price: "", brand: "", image: null }); // Reset the form
+      setNewProduct({ name: "", description: "", price: "", image: null }); // Reset the form
     } catch (error) {
       console.error("Error adding product:", error.message);
       toast.error("Failed to add product");
@@ -72,7 +80,7 @@ const ProductPage = () => {
       {authUser?.role === "admin" && (
         <div className="flex justify-end mb-4">
           <button
-            onClick={() => setShowAddProductModal(true)}
+            onClick={openAddProductModal} // Use the new function to open the modal
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
           >
             Add Product
@@ -117,13 +125,6 @@ const ProductPage = () => {
               placeholder="Price"
               value={newProduct.price}
               onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
-              className="border rounded w-full px-4 py-2 mb-2"
-            />
-            <input
-              type="text"
-              placeholder="Brand" // New input field for brand
-              value={newProduct.brand}
-              onChange={(e) => setNewProduct({ ...newProduct, brand: e.target.value })}
               className="border rounded w-full px-4 py-2 mb-2"
             />
             <input

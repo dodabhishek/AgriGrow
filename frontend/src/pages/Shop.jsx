@@ -1,31 +1,11 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { FaFilter } from "react-icons/fa";
 import ProductCard from "./AdminPage/Card/productCard"; // Import the ProductCard component
+import { axiosInstance } from "../lib/axios";
+import { useAuthStore } from "../store/useAuthStore"; // Import auth store to get the logged-in user
 
 export default function Shop() {
-  const products = [
-    { name: "Apples", price: 50, image: "/src/Images/Apple.jpg", category: "Fresh Vegetables" },
-    { name: "Bananas", price: 20, image: "/src/Images/bananas.jpg", category: "Fruits" },
-    { name: "Carrot", price: 50, image: "/src/Images/carrot.jpg", category: "Fresh Vegetables" },
-    { name: "Garlic", price: 20, image: "/src/Images/garlic.jpg", category: "Organic Food" },
-    { name: "Grapes", price: 100, image: "/src/Images/grapes.jpg", category: "Fruits" },
-    { name: "Lettuce", price: 50, image: "/src/Images/lettuce.jpg", category: "Fresh Vegetables" },
-    { name: "Tomatoes", price: 40, image: "/src/Images/tomatoes.jpg", category: "Fresh Vegetables" },
-    { name: "Cucumber", price: 30, image: "/src/Images/cucumber.jpg", category: "Fresh Vegetables" },
-    { name: "Pumpkin", price: 60, image: "/src/Images/pumpkin.jpg", category: "Fresh Vegetables" },
-    { name: "Broccoli", price: 80, image: "/src/Images/broccoli.jpg", category: "Fresh Vegetables" },
-    { name: "Bell Pepper", price: 70, image: "/src/Images/bell_pepper.jpg", category: "Fresh Vegetables" },
-    { name: "Spinach", price: 40, image: "/src/Images/spinach.jpg", category: "Fresh Vegetables" },
-    { name: "Mushrooms", price: 90, image: "/src/Images/mushrooms.jpg", category: "Organic Food" },
-    { name: "Sweet Corn", price: 50, image: "/src/Images/sweet_corn.jpg", category: "Organic Food" },
-    { name: "Radish", price: 25, image: "/src/Images/radish.jpg", category: "Fresh Vegetables" },
-    { name: "Peas", price: 35, image: "/src/Images/peas.jpg", category: "Fresh Vegetables" },
-    { name: "Cabbage", price: 45, image: "/src/Images/cabbage.jpg", category: "Fresh Vegetables" },
-    { name: "Eggplant", price: 55, image: "/src/Images/eggplant.jpg", category: "Fresh Vegetables" }
-  ];
-
-  const categories = ["All", "Agriculture", "Farming", "Fresh Vegetables", "Harvest", "Organic Food"];
-
+  const [products, setProducts] = useState([]); // State to store products
   const [priceRange, setPriceRange] = useState([0, 100]);
   const [currentPage, setCurrentPage] = useState(1);
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -33,54 +13,67 @@ export default function Shop() {
   const [quantities, setQuantities] = useState({}); // Track quantities for each product
 
   const itemsPerPage = 9;
+  const { authUser } = useAuthStore(); // Get the logged-in user
 
-  const authUser = { role: "user" }; // Simulate the authUser role
+  // Fetch products from the backend
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const res = await axiosInstance.get("/products");
+        if (Array.isArray(res.data.products)) {
+          setProducts(res.data.products);
+        } else {
+          console.error("Unexpected API response format");
+        }
+      } catch (error) {
+        console.error("Error fetching products:", error.message);
+      }
+    };
 
+    fetchProducts();
+  }, []);
+
+  // Dynamically generate categories from products
+  const categories = ["All", ...new Set(products.map((product) => product.category || "Uncategorized"))];
+
+  // Filter products based on price range and selected category
   const filteredProducts = products
-    .filter(product => product.price >= appliedPriceRange[0] && product.price <= appliedPriceRange[1])
-    .filter(product => selectedCategory === "All" || product.category === selectedCategory);
+    .filter((product) => product.price >= appliedPriceRange[0] && product.price <= appliedPriceRange[1])
+    .filter((product) => selectedCategory === "All" || product.category === selectedCategory);
 
+  // Paginate the filtered products
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
 
+  // Apply the price filter
   const applyPriceFilter = () => {
     setAppliedPriceRange(priceRange);
   };
 
-  const handleIncrease = (productName, productPrice) => {
-    setQuantities((prev) => ({
-      ...prev,
-      [productName]: {
-        quantity: (prev[productName]?.quantity || 0) + 1,
-        totalPrice: (prev[productName]?.totalPrice || 0) + productPrice,
-      },
-    }));
-  };
-
-  const handleDecrease = (productName, productPrice) => {
-    setQuantities((prev) => {
-      const currentQuantity = prev[productName]?.quantity || 0;
-      if (currentQuantity > 0) {
-        return {
-          ...prev,
-          [productName]: {
-            quantity: currentQuantity - 1,
-            totalPrice: prev[productName]?.totalPrice - productPrice,
-          },
-        };
-      }
-      return prev;
-    });
+  // Handle adding a product to the cart
+  const handleAddToCart = async (productId) => {
+    try {
+      const response = await axiosInstance.post("/add-to-cart", {
+        userId: authUser._id, // Pass the logged-in user's ID
+        productId, // Pass the product ID
+      });
+      console.log(response.data.message); // Log success message
+    } catch (error) {
+      console.error("Error adding product to cart:", error.message);
+    }
   };
 
   return (
     <div className="max-w-7xl mx-auto px-0 p-6">
+      {/* Shop Header */}
       <div className="text-center py-10">
         <img src="/images/ShopHeader.jpg" alt="Shop Header" className="w-full mx-auto" />
       </div>
 
       <div className="grid grid-cols-4 gap-6">
+        {/* Sidebar for Filters */}
         <aside className="col-span-1 border p-4 rounded-lg">
-          <aside className="col-span-1 border p-4 rounded-lg mb-6">
+          {/* Price Filter */}
+          <div className="border p-4 rounded-lg mb-6">
             <h3 className="font-bold mb-2">Price</h3>
             <div className="flex justify-between text-sm">
               <span>Min: ${priceRange[0]}</span>
@@ -105,15 +98,16 @@ export default function Shop() {
             <button className="mt-2 w-full bg-green-500 text-white p-2 rounded" onClick={applyPriceFilter}>
               Apply
             </button>
-          </aside>
+          </div>
 
+          {/* Category Filter */}
           <h3 className="font-bold mb-2">Categories</h3>
           <ul>
             {categories.map((category) => (
               <li
                 key={category}
                 className={`cursor-pointer p-2 border-b last:border-none ${
-                  selectedCategory === category ? 'font-bold text-green-600' : ''
+                  selectedCategory === category ? "font-bold text-green-600" : ""
                 }`}
                 onClick={() => setSelectedCategory(category)}
               >
@@ -123,20 +117,20 @@ export default function Shop() {
           </ul>
         </aside>
 
+        {/* Main Content */}
         <main className="col-span-3">
+          {/* Product Grid */}
           <div className="grid grid-cols-3 gap-6">
             {paginatedProducts.length > 0 ? (
               paginatedProducts.map((product) => (
                 <ProductCard
-                  key={product.name}
+                  key={product._id}
+                  productId={product._id} // Pass the product ID
                   name={product.name}
                   price={product.price}
-                  image={product.image}
-                  quantity={quantities[product.name]?.quantity || 0}
-                  totalPrice={quantities[product.name]?.totalPrice || 0}
-                  onIncrease={() => handleIncrease(product.name, product.price)}
-                  onDecrease={() => handleDecrease(product.name, product.price)}
-                  showControls={authUser.role === "user"} // Show + and - buttons only for users
+                  imageUrl={product.imageUrl} // Use imageUrl from the backend
+                  onAddToCart={() => handleAddToCart(product._id)} // Handle Add to Cart
+                  showControls={true} // Show + and - buttons
                 />
               ))
             ) : (
@@ -144,6 +138,7 @@ export default function Shop() {
             )}
           </div>
 
+          {/* Pagination */}
           <div className="flex justify-center space-x-4 mt-6">
             {Array.from({ length: Math.ceil(filteredProducts.length / itemsPerPage) }, (_, i) => i + 1).map((num) => (
               <button
