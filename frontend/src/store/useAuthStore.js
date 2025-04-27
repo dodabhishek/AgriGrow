@@ -10,21 +10,25 @@ export const useAuthStore = create((set, get) => ({
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
-  isCheckingAuth: true,
+  isCheckingAuth: false,
   onlineUsers: [],
   socket: null,
 
   // Check if the user is authenticated
   checkAuth: async () => {
+    console.log("Checking authentication...");
+    set({ isCheckingAuth: true }); // Ensure the loader starts
     try {
       const res = await axiosInstance.get("/auth/check");
       set({ authUser: res.data });
-      get().connectSocket();
+      console.log("Authentication successful:", res.data);
+      get().connectSocket(); // Connect to the socket if authenticated
     } catch (error) {
       console.error("Error in checkAuth:", error);
       set({ authUser: null });
+      toast.error("Authentication failed. Please log in again.");
     } finally {
-      set({ isCheckingAuth: false });
+      set({ isCheckingAuth: false }); // Ensure the loader stops
     }
   },
 
@@ -37,6 +41,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Account created successfully");
       get().connectSocket();
     } catch (error) {
+      console.error("Signup error:", error);
       toast.error(error.response?.data?.message || "Signup failed");
     } finally {
       set({ isSigningUp: false });
@@ -48,11 +53,11 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      console.log(res.data);
       set({ authUser: res.data });
       toast.success("Logged in successfully");
       get().connectSocket();
     } catch (error) {
+      console.error("Login error:", error);
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
       set({ isLoggingIn: false });
@@ -64,8 +69,7 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
-      console.log(res.data);
-      if(res.data.role!="admin"){
+      if (res.data.role !== "admin") {
         toast.error("Invalid credentials");
         return;
       }
@@ -73,6 +77,7 @@ export const useAuthStore = create((set, get) => ({
       toast.success("Logged in successfully");
       get().connectSocket();
     } catch (error) {
+      console.error("Expert login error:", error);
       toast.error(error.response?.data?.message || "Login failed");
     } finally {
       set({ isLoggingIn: false });
@@ -86,8 +91,9 @@ export const useAuthStore = create((set, get) => ({
       set({ authUser: null });
       get().disconnectSocket();
       toast.success("Logged out successfully");
-      // navigate("/login"); // Navigate to login page
+      if (navigate) navigate("/login"); // Redirect to login page
     } catch (error) {
+      console.error("Logout error:", error);
       toast.error(error.response?.data?.message || "Logout failed");
     }
   },
@@ -124,11 +130,17 @@ export const useAuthStore = create((set, get) => ({
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
+
+    console.log("Socket connected");
   },
 
   // Disconnect from the socket
   disconnectSocket: () => {
     const socket = get().socket;
-    if (socket?.connected) socket.disconnect();
+    if (socket?.connected) {
+      socket.off("getOnlineUsers");
+      socket.disconnect();
+      console.log("Socket disconnected");
+    }
   },
 }));

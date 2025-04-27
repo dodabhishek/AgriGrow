@@ -35,33 +35,50 @@ export const useChatStore = create((set, get) => ({
   },
   sendMessage: async (messageData) => {
     const { selectedUser, messages } = get();
+    if (!selectedUser) {
+      toast.error("No user selected for chat.");
+      return;
+    }
+  
     try {
       const res = await axiosInstance.post(`/messages/send/${selectedUser._id}`, messageData);
       set({ messages: [...messages, res.data] });
     } catch (error) {
-      toast.error(error.response.data.message);
+      toast.error(error.response?.data?.message || "Failed to send message.");
     }
   },
 
   subscribeToMessages: () => {
     const { selectedUser } = get();
     if (!selectedUser) return;
-
+  
     const socket = useAuthStore.getState().socket;
-
-    socket.on("newMessage", (newMessage) => {
-      const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-      if (!isMessageSentFromSelectedUser) return;
-
-      set({
-        messages: [...get().messages, newMessage],
+  
+    // Unsubscribe from previous listeners to avoid duplicates
+    socket.off("newMessage");
+  
+    const subscribe = () => {
+      socket.on("newMessage", (newMessage) => {
+        const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
+        if (!isMessageSentFromSelectedUser) return;
+  
+        set({
+          messages: [...get().messages, newMessage],
+        });
       });
-    });
+    };
+  
+    // Subscribe initially
+    subscribe();
+  
+    // Re-subscribe on reconnect
+    socket.on("connect", subscribe);
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
     socket.off("newMessage");
+    socket.off("connect"); // Remove the reconnect listener
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),
