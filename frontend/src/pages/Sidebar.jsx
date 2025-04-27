@@ -7,29 +7,17 @@ import React from "react";
 
 const Sidebar = () => {
   const { getUsers, users, selectedUser, setSelectedUser, isUsersLoading } = useChatStore();
-  const { authUser, onlineUsers } = useAuthStore();
+
+  const { onlineUsers } = useAuthStore();
   const [showOnlineOnly, setShowOnlineOnly] = useState(false);
 
   useEffect(() => {
     getUsers();
   }, [getUsers]);
 
-  // Filter users based on the role of the authenticated user
-  const filteredUsers = users.filter((user) => {
-    if (authUser.role === "user") {
-      // If the authenticated user is a "user", show only admins
-      return user.role === "admin";
-    } else if (authUser.role === "admin") {
-      // If the authenticated user is an "admin", show only users who have messaged the admin
-      return user.hasMessagedAdmin; // Assuming `hasMessagedAdmin` is a property in the user object
-    }
-    return false; // Default: show no users if the role is undefined
-  });
-
-  // Apply the "Show online only" filter
-  const finalFilteredUsers = showOnlineOnly
-    ? filteredUsers.filter((user) => onlineUsers.includes(user._id))
-    : filteredUsers;
+  const filteredUsers = showOnlineOnly
+    ? users.filter((user) => onlineUsers.includes(user._id))
+    : users;
 
   if (isUsersLoading) return <SidebarSkeleton />;
 
@@ -40,7 +28,7 @@ const Sidebar = () => {
           <Users className="size-6" />
           <span className="font-medium hidden lg:block">Contacts</span>
         </div>
-        {/* Online filter toggle */}
+        {/* TODO: Online filter toggle */}
         <div className="mt-3 hidden lg:flex items-center gap-2">
           <label className="cursor-pointer flex items-center gap-2">
             <input
@@ -56,7 +44,7 @@ const Sidebar = () => {
       </div>
 
       <div className="overflow-y-auto w-full py-3">
-        {finalFilteredUsers.map((user) => (
+        {filteredUsers.map((user) => (
           <button
             key={user._id}
             onClick={() => setSelectedUser(user)}
@@ -90,12 +78,11 @@ const Sidebar = () => {
           </button>
         ))}
 
-        {finalFilteredUsers.length === 0 && (
-          <div className="text-center text-zinc-500 py-4">No users found</div>
+        {filteredUsers.length === 0 && (
+          <div className="text-center text-zinc-500 py-4">No online users</div>
         )}
       </div>
     </aside>
   );
 };
-
 export default Sidebar;

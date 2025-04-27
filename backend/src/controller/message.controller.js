@@ -7,7 +7,33 @@ import { getReceiverSocketId, io } from "../lib/socket.js";
 export const getUsersForSidebar = async (req, res) => {
   try {
     const loggedInUserId = req.user._id;
-    const filteredUsers = await User.find({ _id: { $ne: loggedInUserId } }).select("-password");
+
+    const loggedInUser = await User.findById(loggedInUserId);
+
+    if (!loggedInUser) {
+      return res.status(404).json({ error: "User not found" });
+    }
+
+    let filteredUsers;
+
+    if (loggedInUser.role === "user") {
+      // If the logged-in user is a normal user, show all admins
+      filteredUsers = await User.find({ 
+        _id: { $ne: loggedInUserId }, 
+        role: "admin" 
+      }).select("-password");
+    } else if (loggedInUser.role === "admin") {
+      // If the logged-in user is an admin, show only users who have messaged him
+      const usersWhoMessaged = await Message.find({ receiverId: loggedInUserId })
+        .distinct("senderId"); // Get distinct senderIds
+
+      filteredUsers = await User.find({ 
+        _id: { $in: usersWhoMessaged },
+        role: "user" 
+      }).select("-password");
+    } else {
+      return res.status(400).json({ error: "Invalid user role" });
+    }
 
     res.status(200).json(filteredUsers);
   } catch (error) {
@@ -15,7 +41,6 @@ export const getUsersForSidebar = async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 };
-
 export const getMessages = async (req, res) => {
   try {
     const { id: userToChatId } = req.params;
