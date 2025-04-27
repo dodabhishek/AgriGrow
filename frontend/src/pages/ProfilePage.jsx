@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
 import { Camera, Mail, User, LogOut } from "lucide-react"; // Import LogOut icon
-
+import React from "react";
 const ProfilePage = () => {
   const { authUser, isUpdatingProfile, updateProfile, logout } = useAuthStore(); // Add logout function
   const [selectedImg, setSelectedImg] = useState(null);

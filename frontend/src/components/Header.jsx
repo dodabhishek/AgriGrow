@@ -9,6 +9,7 @@ import {
   FaSearch,
   FaShoppingCart,
   FaUser,
+  FaComments,
 } from "react-icons/fa";
 import { Link, useNavigate } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
@@ -27,6 +28,10 @@ const Header = () => {
 
   const handleCartClick = () => {
     navigate("/cart"); // Navigate to the cart page
+  };
+
+  const handleChatClick = () => {
+    navigate("/chat"); // Navigate to the chat page
   };
 
   return (
@@ -104,7 +109,7 @@ const Header = () => {
           </Link>
         </nav>
 
-        {/* Search, Cart, and User Icons */}
+        {/* Search, Cart, Chat, and User Icons */}
         <div className="flex items-center space-x-4">
           {/* Search Bar */}
           <div className="relative">
@@ -125,6 +130,16 @@ const Header = () => {
               onClick={handleCartClick}
             >
               <FaShoppingCart size={20} />
+            </button>
+          )}
+
+          {/* Chat Button */}
+          {authUser && (
+            <button
+              className="text-gray-700 hover:text-green-600"
+              onClick={handleChatClick}
+            >
+              <FaComments size={20} />
             </button>
           )}
 

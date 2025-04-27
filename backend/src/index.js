@@ -23,16 +23,12 @@ app.use(cookieParser());
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// Test route
-app.get('/', (req, res) => {
-    res.send('Welcome to my home page');
-});
-
 // API routes for login/signup
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/products', productRoutes); // Use product routes for product creation
 app.use('/api/cart', cartRoutes); // Use cart routes for cart-related operations
+app.unsubscribe("/api/messages", messageRoutes); // Unsubscribe from cart routes
 
 // Start the server
 server.listen(PORT, () => {

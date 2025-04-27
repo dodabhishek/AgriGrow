@@ -1,6 +1,6 @@
 import express from "express";
-import { createProduct, getProducts} from "../controller/ productController.js";
-import { addToCart } from "../controller/cartController.js";
+import { createProduct, getProducts,} from "../controller/productController.js";
+import { addToCart,updateCartProduct } from "../controller/cartController.js";
 import { protectRoute, adminProtect } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
@@ -9,5 +9,5 @@ const router = express.Router();
 console.log("Product route loaded");
 router.get("/", getProducts);
 router.post("/", protectRoute, adminProtect, createProduct);
-
+router.put("/",updateCartProduct);
 export default router;
