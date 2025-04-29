@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { useAuthStore } from "../store/useAuthStore";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import React from "react";
 import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
 
@@ -14,17 +14,35 @@ const LoginPage = () => {
     email: "",
     password: "",
   });
-  const { login, isLoggingIn,expertLogin } = useAuthStore();
+  const { login, isLoggingIn } = useAuthStore();
+  const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    login(formData);
+    try {
+      await login(formData);
+      // After successful login, check if user is admin and redirect accordingly
+      const user = JSON.parse(localStorage.getItem('authUser'));
+      if (user && user.role === 'admin') {
+        navigate('/products'); // Redirect admin to products page
+      } else {
+        navigate('/'); // Redirect regular user to home page
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   const handleExpertSubmit = async (e) => {
     e.preventDefault();
-    expertLogin(expertFormData); // Use the same login function for experts
+    // Use the same login function for experts
+    try {
+      await login(expertFormData);
+      navigate('/products'); // Redirect to products page after login
+    } catch (error) {
+      console.error("Login error:", error);
+    }
   };
 
   return (

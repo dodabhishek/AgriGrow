@@ -18,16 +18,16 @@ const productSchema = new mongoose.Schema({
     type: String,
     
   },
-  brand: {
-    type: String,
-    required: [true, "Please provide product brand"],
+  user:{
+    type: mongoose.Schema.Types.ObjectId,
+    ref: "User",
+    required: [true, "Please provide user ID"],
   },
   createdAt: {
     type: Date,
     default: Date.now,
   },
 });
-
 const Product = mongoose.model("Product", productSchema);
 
 export default Product; // Use export default for ES Modules

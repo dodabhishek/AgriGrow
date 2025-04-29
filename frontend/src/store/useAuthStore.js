@@ -5,30 +5,54 @@ import { io } from "socket.io-client";
 
 const BASE_URL = import.meta.env.MODE === "development" ? "http://localhost:3000" : "/";
 
+// Initialize authUser from localStorage if available
+const initialAuthUser = localStorage.getItem('authUser') ? JSON.parse(localStorage.getItem('authUser')) : null;
+
 export const useAuthStore = create((set, get) => ({
-  authUser: null,
+  authUser: initialAuthUser,
   isSigningUp: false,
   isLoggingIn: false,
   isUpdatingProfile: false,
   isCheckingAuth: false,
+  hasCheckedAuth: false,
   onlineUsers: [],
   socket: null,
 
   // Check if the user is authenticated
   checkAuth: async () => {
-    console.log("Checking authentication...");
-    set({ isCheckingAuth: true }); // Ensure the loader starts
+    // If already checking auth, don't start another check
+    if (get().isCheckingAuth) {
+      console.log("Authentication check already in progress");
+      return;
+    }
+    
+    // If we've already checked auth and there's no user, don't check again
+    if (get().hasCheckedAuth && get().authUser === null) {
+      console.log("Authentication already checked, no user found");
+      return;
+    }
+    
+    console.log("Starting authentication check...");
+    set({ isCheckingAuth: true });
+    
     try {
       const res = await axiosInstance.get("/auth/check");
-      set({ authUser: res.data });
+      set({ authUser: res.data, hasCheckedAuth: true });
       console.log("Authentication successful:", res.data);
       get().connectSocket(); // Connect to the socket if authenticated
     } catch (error) {
       console.error("Error in checkAuth:", error);
-      set({ authUser: null });
-      toast.error("Authentication failed. Please log in again.");
+      // Only set authUser to null if it's not already null
+      if (get().authUser !== null) {
+        set({ authUser: null });
+      }
+      set({ hasCheckedAuth: true });
+      // Only show the error toast if it's not a 401 Unauthorized error
+      if (error.response?.status !== 401) {
+        toast.error("Authentication failed. Please log in again.");
+      }
     } finally {
-      set({ isCheckingAuth: false }); // Ensure the loader stops
+      set({ isCheckingAuth: false });
     }
   },
 
@@ -53,35 +77,26 @@ export const useAuthStore = create((set, get) => ({
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      // Store the user data in localStorage for persistence
+      localStorage.setItem('authUser', JSON.stringify(res.data));
+      // Update the auth state
       set({ authUser: res.data });
       toast.success("Logged in successfully");
       get().connectSocket();
+      return res.data; // Return the user data for the component to use
     } catch (error) {
       console.error("Login error:", error);
       toast.error(error.response?.data?.message || "Login failed");
+      throw error; // Rethrow the error for the component to handle
     } finally {
       set({ isLoggingIn: false });
     }
   },
 
-  // Expert login function
+  // Expert login function - This is now redundant but kept for backward compatibility
   expertLogin: async (data) => {
-    set({ isLoggingIn: true });
-    try {
-      const res = await axiosInstance.post("/auth/login", data);
-      if (res.data.role !== "admin") {
-        toast.error("Invalid credentials");
-        return;
-      }
-      set({ authUser: res.data });
-      toast.success("Logged in successfully");
-      get().connectSocket();
-    } catch (error) {
-      console.error("Expert login error:", error);
-      toast.error(error.response?.data?.message || "Login failed");
-    } finally {
-      set({ isLoggingIn: false });
-    }
+    // Simply call the regular login function
+    return get().login(data);
   },
 
   // Logout function
@@ -103,6 +118,9 @@ export const useAuthStore = create((set, get) => ({
     set({ isUpdatingProfile: true });
     try {
       const res = await axiosInstance.put("/auth/update-profile", data);
+      // Store the updated user data in localStorage
+      localStorage.setItem('authUser', JSON.stringify(res.data));
+      // Update the auth state
       set({ authUser: res.data });
       toast.success("Profile updated successfully");
     } catch (error) {

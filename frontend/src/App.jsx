@@ -20,18 +20,19 @@ import { Toaster } from "react-hot-toast";
 import { Loader } from "lucide-react";
 
 const App = () => {
-  const { authUser, isCheckingAuth, checkAuth } = useAuthStore();
+  const { authUser, isCheckingAuth, hasCheckedAuth, checkAuth } = useAuthStore();
   const { theme } = useThemeStore();
 
   // Check authentication on app load
   useEffect(() => {
-    if (authUser === null) {
+    // Only check auth if we haven't checked yet and aren't already checking
+    if (!hasCheckedAuth && !isCheckingAuth) {
       checkAuth();
     }
-  }, [authUser]);
+  }, [hasCheckedAuth, isCheckingAuth]);
 
   // Show a loader while authentication is being checked
-  if (isCheckingAuth && !authUser) {
+  if (isCheckingAuth && !hasCheckedAuth) {
     return (
       <div className="flex items-center justify-center h-screen">
         <Loader className="size-10 animate-spin" />
