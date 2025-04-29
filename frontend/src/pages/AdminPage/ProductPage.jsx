@@ -1,94 +1,141 @@
 import React, { useState, useEffect } from "react";
-import { axiosInstance } from "../../lib/axios.js"; // Import axiosInstance
+import { axiosInstance } from "../../lib/axios.js";
 import toast from "react-hot-toast";
-import Card from "./Card/productCard.jsx"; // Import Card component
-import { useAuthStore } from "../../store/useAuthStore.js"; // Import auth store
+import Card from "./Card/productCard.jsx";
+import { useAuthStore } from "../../store/useAuthStore.js";
+import { Loader } from "lucide-react";
 
 const ProductPage = () => {
-  const [products, setProducts] = useState([]); // Ensure initial state is an array
-  const [showAddProductModal, setShowAddProductModal] = useState(false); // State for modal visibility
-  const [newProduct, setNewProduct] = useState({ name: "", description: "", price: "", image: null }); // Removed brand from state
-  const { authUser } = useAuthStore(); // Get the logged-in user
+  const [products, setProducts] = useState([]);
+  const [showAddProductModal, setShowAddProductModal] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [isAddingProduct, setIsAddingProduct] = useState(false);
+  const [newProduct, setNewProduct] = useState({
+    name: "",
+    description: "",
+    price: "",
+    image: null,
+    user: "",
+  });
+  const { authUser } = useAuthStore();
 
-  // Fetch products on component mount
   useEffect(() => {
     const fetchProducts = async () => {
       try {
-        const res = await axiosInstance.get("/products"); // Use axiosInstance for the API call
-        console.log("API Response:", res.data.products); // Debugging
+        setIsLoading(true);
+        if (!authUser?._id) {
+          toast.error("Please login to view products");
+          return;
+        }
+        console.log("Fetching products for user:", authUser._id);
+        const res = await axiosInstance.get(`/products/${authUser._id}`);
         if (Array.isArray(res.data.products)) {
-          setProducts(res.data.products); // Set products if response contains an array
+          setProducts(res.data.products);
         } else {
+          console.error("Unexpected API response:", res.data);
           toast.error("Unexpected API response format");
         }
       } catch (error) {
-        console.error("Error fetching products:", error.message);
-        toast.error("Failed to fetch products");
+        console.error("Error fetching products:", error.response?.data || error.message);
+        toast.error(error.response?.data?.message || "Failed to fetch products");
+      } finally {
+        setIsLoading(false);
       }
     };
     fetchProducts();
-  }, []);
+  }, [authUser]);
 
-  // Handle image upload
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (!file) return;
 
     const reader = new FileReader();
-
     reader.readAsDataURL(file);
-
     reader.onload = () => {
-      const base64Image = reader.result;
-      setNewProduct({ ...newProduct, image: base64Image }); // Save base64 image in state
+      setNewProduct({ ...newProduct, image: reader.result });
     };
   };
 
-  // Open the Add Product Modal and set the brand as the user's first name
   const openAddProductModal = () => {
-    const firstName = authUser?.name?.split(" ")[0] || ""; // Extract the first name of the user
-    setNewProduct({ name: "", description: "", price: "", brand: firstName, image: null }); // Automatically set the brand
+    setNewProduct({
+      name: "",
+      description: "",
+      price: "",
+      image: null,
+      user: ""
+    });
     setShowAddProductModal(true);
   };
 
-  // Handle adding a new product
   const handleAddProduct = async () => {
-    if (!newProduct.name || !newProduct.description || !newProduct.price) {
+    const { name, description, price } = newProduct;
+    if (!name || !description || !price) {
       toast.error("All fields are required");
       return;
     }
-
+    
     try {
-      const productData = { ...newProduct, brand: authUser?.name?.split(" ")[0] || "" }; // Add brand dynamically
-      const res = await axiosInstance.post("/products/", productData); // Send product data to backend
-      setProducts([...products, res.data.product]); // Add the new product to the list
+      setIsAddingProduct(true);
+      console.log(authUser)
+      const res = await axiosInstance.post("/products/", {
+        ...newProduct,
+        user: authUser?._id || "Unknown", 
+      });
+      setProducts([...products, res.data.product]);
       toast.success("Product added successfully");
-      setShowAddProductModal(false); // Close the modal
-      setNewProduct({ name: "", description: "", price: "", image: null }); // Reset the form
+      setShowAddProductModal(false);
+      setNewProduct({ name: "", description: "", price: "", image: null, user: "" });
     } catch (error) {
       console.error("Error adding product:", error.message);
       toast.error("Failed to add product");
+    } finally {
+      setIsAddingProduct(false);
     }
   };
 
+  const handleDeleteProduct = async (productId) => {
+    try {
+      console.log(productId)
+      await axiosInstance.delete(`/products/${productId}`);
+      setProducts(products.filter(product => product._id !== productId));
+      toast.success("Product deleted successfully");
+    } catch (error) {
+      console.error("Error deleting product:", error.message);
+      toast.error("Failed to delete product");
+    }
+  };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <Loader className="size-10 animate-spin" />
+      </div>
+    );
+  }
+
   return (
     <div className="p-8 bg-gray-100 min-h-screen" style={{ paddingTop: "80px" }}>
-      {/* Add paddingTop to account for the navbar height */}
       <h1 className="text-3xl font-bold text-center mb-8 text-gray-800">Products</h1>
 
-      {/* Add Product Button for Admin */}
       {authUser?.role === "admin" && (
         <div className="flex justify-end mb-4">
           <button
-            onClick={openAddProductModal} // Use the new function to open the modal
+            onClick={openAddProductModal}
             className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+            disabled={isAddingProduct}
           >
-            Add Product
+            {isAddingProduct ? (
+              <div className="flex items-center gap-2">
+                <Loader className="size-4 animate-spin" />
+                Adding Product...
+              </div>
+            ) : (
+              "Add Product"
+            )}
           </button>
         </div>
       )}
 
-      {/* Product Grid */}
       <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
         {Array.isArray(products) &&
           products.map((product) => (
@@ -97,12 +144,18 @@ const ProductPage = () => {
               name={product.name}
               description={product.description}
               price={product.price}
-              imageUrl={product.imageUrl} // Pass imageUrl to the Card component
+              imageUrl={product.imageUrl}
+              productId={product._id}
+              onProductUpdate={(updatedProduct) => {
+                setProducts(products.map(p => 
+                  p._id === updatedProduct._id ? updatedProduct : p
+                ));
+              }}
+              onProductDelete={handleDeleteProduct}
             />
           ))}
       </div>
 
-      {/* Add Product Modal */}
       {showAddProductModal && (
         <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center">
           <div className="bg-white p-6 rounded shadow-lg w-96">
@@ -113,12 +166,14 @@ const ProductPage = () => {
               value={newProduct.name}
               onChange={(e) => setNewProduct({ ...newProduct, name: e.target.value })}
               className="border rounded w-full px-4 py-2 mb-2"
+              disabled={isAddingProduct}
             />
             <textarea
               placeholder="Product Description"
               value={newProduct.description}
               onChange={(e) => setNewProduct({ ...newProduct, description: e.target.value })}
               className="border rounded w-full px-4 py-2 mb-2"
+              disabled={isAddingProduct}
             />
             <input
               type="number"
@@ -126,25 +181,36 @@ const ProductPage = () => {
               value={newProduct.price}
               onChange={(e) => setNewProduct({ ...newProduct, price: e.target.value })}
               className="border rounded w-full px-4 py-2 mb-2"
+              disabled={isAddingProduct}
             />
             <input
               type="file"
               accept="image/*"
-              onChange={handleImageUpload} // Use handleImageUpload for image input
+              onChange={handleImageUpload}
               className="border rounded w-full px-4 py-2 mb-4"
+              disabled={isAddingProduct}
             />
             <div className="flex justify-end gap-2">
               <button
                 onClick={() => setShowAddProductModal(false)}
                 className="bg-gray-500 text-white px-4 py-2 rounded hover:bg-gray-600 transition-colors"
+                disabled={isAddingProduct}
               >
                 Cancel
               </button>
               <button
                 onClick={handleAddProduct}
-                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors"
+                className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition-colors flex items-center gap-2"
+                disabled={isAddingProduct}
               >
-                Add
+                {isAddingProduct ? (
+                  <>
+                    <Loader className="size-4 animate-spin" />
+                    Adding...
+                  </>
+                ) : (
+                  "Add"
+                )}
               </button>
             </div>
           </div>

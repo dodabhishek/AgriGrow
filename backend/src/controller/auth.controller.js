@@ -102,9 +102,20 @@ export const updateProfile = async (req, res) => {
       userId,
       { profilePic: uploadResponse.secure_url },
       { new: true }
-    );
+    ).select('-password'); // Exclude password from the response
 
-    res.status(200).json(updatedUser);
+    if (!updatedUser) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    res.status(200).json({
+      _id: updatedUser._id,
+      fullName: updatedUser.fullName,
+      email: updatedUser.email,
+      role: updatedUser.role,
+      profilePic: updatedUser.profilePic,
+      createdAt: updatedUser.createdAt
+    });
   } catch (error) {
     console.log("Error in update profile:", error);
     res.status(500).json({ message: "Internal server error" });
