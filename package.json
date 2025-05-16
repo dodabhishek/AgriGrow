@@ -1,10 +1,10 @@
 {
   "name": "newproject",
   "version": "1.0.0",
-  "main": "index.js",
+  "main": "./AgriGrow_backend/src/index.js",
   "scripts": {
     "build": "npm install && cd AgriGrow_backend && npm install --force && cd ../AgriGrow_frontend && npm install --force && npm run build",
-    "start": "cd AgriGrow_backend && npm start",
+    "start": "node ./AgriGrow_backend/src/index.js",
     "postinstall": "npm install --prefix AgriGrow_backend && npm install --prefix AgriGrow_frontend"
   },
   "engines": {
