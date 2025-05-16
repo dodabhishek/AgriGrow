@@ -1,0 +1,6 @@
+[submodule "AgriGrow_backend"]
+	path = AgriGrow_backend
+	url = https://github.com/dodabhishek/AgriGrow_backend.git
+[submodule "AgriGrow_frontend"]
+	path = AgriGrow_frontend
+	url = https://github.com/dodabhishek/AgriGrow_frontend.git
