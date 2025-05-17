@@ -73,20 +73,24 @@ export const useAuthStore = create((set, get) => ({
   },
 
   // Login function
-  login: async (data) => {
+  login: async (data, expectedRole) => {
     set({ isLoggingIn: true });
     try {
       const res = await axiosInstance.post("/auth/login", data);
+      
+      // Check if the user's role matches the expected role
+      if (expectedRole && res.data.role !== expectedRole) {
+        throw new Error(`Please use the ${expectedRole} login form`);
+      }
+      
       // Store the user data in localStorage for persistence
       localStorage.setItem('authUser', JSON.stringify(res.data));
       // Update the auth state
       set({ authUser: res.data });
-      toast.success("Logged in successfully");
       get().connectSocket();
       return res.data; // Return the user data for the component to use
     } catch (error) {
       console.error("Login error:", error);
-      toast.error(error.response?.data?.message || "Login failed");
       throw error; // Rethrow the error for the component to handle
     } finally {
       set({ isLoggingIn: false });

@@ -1,8 +1,10 @@
 import { useState } from "react";
-import { useAuthStore } from "../store/useAuthStore";
+import { useAuthStore } from "../../store/useAuthStore";
 import { Link, useNavigate } from "react-router-dom";
 import React from "react";
-import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare } from "lucide-react";
+import { Eye, EyeOff, Loader2, Lock, Mail, MessageSquare, Shield } from "lucide-react";
+import toast from "react-hot-toast";
+import Loader from "../../components/Loader";
 
 const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -19,31 +21,55 @@ const LoginPage = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
     try {
-      await login(formData);
-      // After successful login, check if user is admin and redirect accordingly
-      const user = JSON.parse(localStorage.getItem('authUser'));
-      if (user && user.role === 'admin') {
-        navigate('/products'); // Redirect admin to products page
-      } else {
-        navigate('/'); // Redirect regular user to home page
-      }
+      const res = await login({ email: formData.email, password: formData.password }, "user");
+      toast.success("Login successful!");
+      navigate("/");
     } catch (error) {
       console.error("Login error:", error);
+      if (error.message.includes("Please use the")) {
+        toast.error(error.message);
+      } else if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Invalid email or password");
+      }
     }
   };
 
   const handleExpertSubmit = async (e) => {
     e.preventDefault();
-    // Use the same login function for experts
     try {
-      await login(expertFormData);
-      navigate('/products'); // Redirect to products page after login
+      const res = await login({ email: expertFormData.email, password: expertFormData.password }, "admin");
+      toast.success("Admin login successful!");
+      navigate("/products");
     } catch (error) {
       console.error("Login error:", error);
+      if (error.message.includes("Please use the")) {
+        toast.error(error.message);
+      } else if (error.response?.data?.message) {
+        toast.error(error.response.data.message);
+      } else {
+        toast.error("Invalid email or password");
+      }
     }
   };
+
+  if (isLoggingIn) {
+    return (
+      <div className="h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-gray-100">
+        <div className="flex flex-col items-center gap-4">
+          <div className="relative">
+            <div className="w-16 h-16 rounded-full bg-blue-100 flex items-center justify-center animate-pulse">
+              <Loader2 className="w-8 h-8 text-blue-600 animate-spin" />
+            </div>
+            <div className="absolute -inset-1 rounded-full bg-blue-100 opacity-20 blur-md animate-pulse"></div>
+          </div>
+          <p className="text-lg font-medium text-gray-700">Signing in...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="h-screen grid lg:grid-cols-2 bg-gradient-to-r from-blue-50 to-gray-100">
@@ -118,14 +144,7 @@ const LoginPage = () => {
               className="btn btn-primary w-full bg-blue-600 text-white hover:bg-blue-700 rounded-lg py-2 transition-all"
               disabled={isLoggingIn}
             >
-              {isLoggingIn ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                "Sign in"
-              )}
+              Sign in
             </button>
           </form>
 
@@ -140,7 +159,7 @@ const LoginPage = () => {
         </div>
       </div>
 
-      {/* Right Side - Expert Login */}
+      {/* Right Side - Admin Login */}
       <div className="flex flex-col justify-center items-center p-8 sm:p-12 bg-gray-50 shadow-lg rounded-lg">
         <div className="w-full max-w-md space-y-8">
           {/* Logo */}
@@ -150,10 +169,10 @@ const LoginPage = () => {
                 className="w-12 h-12 rounded-xl bg-green-100 flex items-center justify-center group-hover:bg-green-200
               transition-colors"
               >
-                <MessageSquare className="w-6 h-6 text-green-600" />
+                <Shield className="w-6 h-6 text-green-600" />
               </div>
-              <h1 className="text-3xl font-bold mt-2 text-gray-800">Hello Expert</h1>
-              <p className="text-gray-500">Welcome back</p>
+              <h1 className="text-3xl font-bold mt-2 text-gray-800">Admin Login</h1>
+              <p className="text-gray-500">Access admin dashboard</p>
             </div>
           </div>
 
@@ -170,7 +189,7 @@ const LoginPage = () => {
                 <input
                   type="email"
                   className="input input-bordered w-full pl-10 rounded-lg border-gray-300 focus:ring-2 focus:ring-green-500"
-                  placeholder="expert@gmail.com"
+                  placeholder="admin@example.com"
                   value={expertFormData.email}
                   onChange={(e) => setExpertFormData({ ...expertFormData, email: e.target.value })}
                 />
@@ -211,14 +230,7 @@ const LoginPage = () => {
               className="btn btn-primary w-full bg-green-600 text-white hover:bg-green-700 rounded-lg py-2 transition-all"
               disabled={isLoggingIn}
             >
-              {isLoggingIn ? (
-                <>
-                  <Loader2 className="h-5 w-5 animate-spin" />
-                  Loading...
-                </>
-              ) : (
-                "Sign in"
-              )}
+              Admin Sign in
             </button>
           </form>
         </div>

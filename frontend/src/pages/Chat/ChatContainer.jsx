@@ -1,11 +1,14 @@
-import { useChatStore } from "../store/useChatStore.js";
-import { useEffect, useRef } from "react";
-import React from "react";
+import React, { useEffect, useState } from "react";
+import { useChatStore } from "../../store/useChatStore";
+import { useRef } from "react";
 import ChatHeader from "./ChatHeader";
 import MessageInput from "./MessageInput";
-import MessageSkeleton from "./Chat/skeletons/MessageSkeleton";
-import { useAuthStore } from "../store/useAuthStore";
-import { formatMessageTime } from "../lib/utils";
+import MessageSkeleton from "./skeletons/MessageSkeleton.jsx";
+import { useAuthStore } from "../../store/useAuthStore";
+// import formatMessageTime from "";
+import { axiosInstance } from "../../lib/axios";
+import { Loader } from "lucide-react";
+import toast from "react-hot-toast";
 
 const ChatContainer = () => {
   const {
@@ -18,6 +21,7 @@ const ChatContainer = () => {
   } = useChatStore();
   const { authUser } = useAuthStore();
   const messageEndRef = useRef(null);
+  const chatContainerRef = useRef(null);
 
   useEffect(() => {
     getMessages(selectedUser._id);
@@ -27,25 +31,27 @@ const ChatContainer = () => {
 
   useEffect(() => {
     if (messageEndRef.current && messages) {
-      messageEndRef.current.scrollIntoView({ behavior: "smooth" });
+      messageEndRef.current.scrollIntoView({ behavior: "smooth", block: "end" });
     }
   }, [messages]);
 
   if (isMessagesLoading) {
     return (
-      <div className="flex-1 flex flex-col overflow-auto">
+      <div className="flex-1 flex flex-col h-full">
         <ChatHeader />
-        <MessageSkeleton />
+        <div className="flex-1 overflow-y-auto">
+          <MessageSkeleton />
+        </div>
         <MessageInput />
       </div>
     );
   }
 
   return (
-    <div className="flex-1 flex flex-col overflow-auto">
+    <div className="flex-1 flex flex-col h-full">
       <ChatHeader />
 
-      <div className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
         {messages.map((message, index) => {
           const isSender = message.senderId === authUser._id;
           const profilePic = isSender
@@ -94,7 +100,7 @@ const ChatContainer = () => {
                   )}
                   {message.text && <p>{message.text}</p>}
                   <div className="text-xs text-right mt-1 opacity-60">
-                    {formatMessageTime(message.createdAt)}
+                    {/* {formatMessageTime(message.createdAt)} */}
                   </div>
                 </div>
               </div>
