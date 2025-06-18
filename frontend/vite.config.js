@@ -9,12 +9,12 @@ export default defineConfig({
     host: true,
     proxy: {
       '/api': {
-        target: 'http://localhost:3000',
+        target: process.env.VITE_API_BASE_URL || 'http://localhost:3000',
         changeOrigin: true,
         secure: false,
       },
       '/socket.io': {
-        target: 'http://localhost:3000',
+        target: process.env.VITE_WS_URL || 'ws://localhost:3000',
         changeOrigin: true,
         secure: false,
         ws: true,
@@ -25,6 +25,7 @@ export default defineConfig({
     outDir: 'dist',
     sourcemap: false,
     minify: true,
+    chunkSizeWarningLimit: 1600,
     rollupOptions: {
       output: {
         manualChunks: {

@@ -1,4 +1,15 @@
 {
+  "name": "farm-fresh-project",
+  "version": "1.0.0",
+  "description": "Farm Fresh E-commerce and Chat Application",
+  "scripts": {
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install",
+    "build": "cd frontend && npm run build && cd ../backend && npm install",
+    "start": "cd backend && node src/index.js"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  },
   "dependencies": {
     "framer-motion": "^12.9.2",
     "react-icons": "^5.5.0"

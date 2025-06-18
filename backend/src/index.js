@@ -14,11 +14,9 @@ dotenv.config();
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
-    origin: process.env.NODE_ENV === 'production' 
-        ? ['https://chat-app-frontend.onrender.com', 'http://localhost:5173']
-        : 'http://localhost:5173',
-    credentials: true,  
-}));
+    origin: true,
+    credentials: true,
+  }));
 
 app.use(cookieParser());
 // Increase payload size limit
@@ -31,6 +29,13 @@ app.use('/api/messages', messageRoutes);
 app.use('/api/products/', productRoutes); // Use product routes for product creation
 app.use('/api/cart', cartRoutes); // Use cart routes for cart-related operations
 app.unsubscribe("/api/messages", messageRoutes); // Unsubscribe from cart routes
+
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    app.get('/(.*)', (req, res) => {
+      res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+    });
+  }
 
 // Start the server
 server.listen(PORT, () => {
