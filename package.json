@@ -2,12 +2,10 @@
   "name": "farm-fresh-project",
   "version": "1.0.0",
   "description": "Farm Fresh E-commerce and Chat Application",
+  
   "scripts": {
-    "install-backend": "cd backend && npm install",
-    "install-frontend": "cd frontend && npm install",
-    "build-frontend": "cd frontend && npm run build",
-    "build": "npm run install-frontend && npm run build-frontend && npm run install-backend",
-    "start": "cd backend && node src/index.js"
+    "build": "npm install --prefix backend && npm install --prefix frontend && npm run build --prefix frontend",
+    "start": "npm run start --prefix backend"
   },
   "engines": {
     "node": ">=18.0.0"
