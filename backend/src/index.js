@@ -2,40 +2,54 @@ import express from 'express';
 import cookieParser from 'cookie-parser';
 import { connectDB } from './lib/db.js';
 import authRoutes from './routes/auth.route.js';
-import productRoutes from './routes/productRoute.js'; // Correct import
-import cartRoutes from './routes/cartRoute.js'; // Import cart routes
+import productRoutes from './routes/productRoute.js';
+import cartRoutes from './routes/cartRoute.js';
+import messageRoutes from './routes/message.route.js';
 import cors from 'cors';
 import dotenv from 'dotenv';
-import { app, server } from './lib/socket.js'; // Correct import
-import messageRoutes from './routes/message.route.js'; // Correct import
+import { app, server } from './lib/socket.js';
+import path from 'path';
+import { fileURLToPath } from 'url';
 
 dotenv.config();
+
+// Get the directory path for ES modules
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
 
 const PORT = process.env.PORT || 3000;
 
 app.use(cors({
     origin: true,
     credentials: true,
-  }));
+}));
 
+// Middleware
 app.use(cookieParser());
-// Increase payload size limit
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ limit: "50mb", extended: true }));
 
-// API routes for login/signup
+// API Routes
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
-app.use('/api/products/', productRoutes); // Use product routes for product creation
-app.use('/api/cart', cartRoutes); // Use cart routes for cart-related operations
-app.unsubscribe("/api/messages", messageRoutes); // Unsubscribe from cart routes
+app.use('/api/products', productRoutes);
+app.use('/api/cart', cartRoutes);
 
-if(process.env.NODE_ENV === 'production'){
-    app.use(express.static(path.join(__dirname, '../frontend/dist')));
-    app.get('/(.*)', (req, res) => {
-      res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+// Serve static files from the React app in production
+if (process.env.NODE_ENV === 'production') {
+    const distPath = path.resolve(__dirname, '../..', 'frontend', 'dist');
+    app.use(express.static(distPath));
+    
+    app.get('/*', (req, res) => {
+        res.sendFile(path.join(distPath, 'index.html'));
     });
-  }
+}
+
+// Error handling middleware
+app.use((err, req, res, next) => {
+    console.error(err.stack);
+    res.status(500).send('Something broke!');
+});
 
 // Start the server
 server.listen(PORT, () => {

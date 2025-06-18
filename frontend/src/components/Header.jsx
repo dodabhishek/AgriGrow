@@ -1,11 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  FaFacebook,
-  FaTwitter,
-  FaInstagram,
-  FaPhone,
-  FaEnvelope,
-  FaMapMarkerAlt,
   FaSearch,
   FaShoppingCart,
   FaUser,
@@ -165,261 +159,229 @@ const Header = () => {
   };
 
   return (
-    <header 
-      className={`fixed w-full top-0 z-50 transition-all duration-300 ${
-        isScrolled ? "bg-white shadow-md py-2" : "bg-white/90 backdrop-blur-sm py-4"
-      }`}
-    >
-      {/* Main Header */}
-      <div className="container mx-auto px-5">
-        <div className="flex justify-between items-center">
-          {/* Logo */}
-          <Link to="/" className="flex items-center space-x-2 group">
-            <img src="/src/Images/logo.png" alt="Logo" className="h-12 transition-transform group-hover:scale-105" />
-            <span className="text-xl font-bold text-green-600 group-hover:text-green-700 transition-colors">AgriGrow</span>
-          </Link>
+    <header className="fixed w-full top-0 z-50">
+      {/* Gradient background with noise texture */}
+      <div className={`
+        absolute inset-0 transition-all duration-500
+        ${isScrolled 
+          ? "bg-gradient-to-r from-emerald-50/80 via-white/95 to-green-50/80 backdrop-blur-md" 
+          : "bg-gradient-to-r from-emerald-50/60 via-white/80 to-green-50/60 backdrop-blur-sm"
+        }
+      `}>
+        {/* Animated gradient lines */}
+        <div className="absolute inset-0 overflow-hidden">
+          <div className="absolute inset-0 opacity-20">
+            <div className="absolute top-0 -left-4 w-3/4 h-px bg-gradient-to-r from-transparent via-green-500 to-transparent animate-slide-right"></div>
+            <div className="absolute top-0 -right-4 w-3/4 h-px bg-gradient-to-l from-transparent via-emerald-500 to-transparent animate-slide-left"></div>
+          </div>
+        </div>
+      </div>
 
-          {/* Desktop Navigation */}
-          <nav className="hidden md:flex space-x-8 font-medium">
-            <Link 
-              to="/" 
-              className={`py-2 border-b-2 transition-all ${
-                isActive("/") 
-                  ? "border-green-600 text-green-600" 
-                  : "border-transparent text-gray-700 hover:text-green-600 hover:border-green-600"
-              }`}
-            >
-              Home
-            </Link>
-            <Link 
-              to="/about" 
-              className={`py-2 border-b-2 transition-all ${
-                isActive("/about") 
-                  ? "border-green-600 text-green-600" 
-                  : "border-transparent text-gray-700 hover:text-green-600 hover:border-green-600"
-              }`}
-            >
-              About
-            </Link>
-            <Link 
-              to="/service" 
-              className={`py-2 border-b-2 transition-all ${
-                isActive("/service") 
-                  ? "border-green-600 text-green-600" 
-                  : "border-transparent text-gray-700 hover:text-green-600 hover:border-green-600"
-              }`}
-            >
-              Services
-            </Link>
-     
-            {authUser?.role === "admin" ? (
-              <Link 
-                to="/products" 
-                className={`py-2 border-b-2 transition-all ${
-                  isActive("/products") 
-                    ? "border-green-600 text-green-600" 
-                    : "border-transparent text-gray-700 hover:text-green-600 hover:border-green-600"
-                }`}
-              >
-                Products
-              </Link>
-            ) : (
-              <Link 
-                to="/shop" 
-                className={`py-2 border-b-2 transition-all ${
-                  isActive("/shop") 
-                    ? "border-green-600 text-green-600" 
-                    : "border-transparent text-gray-700 hover:text-green-600 hover:border-green-600"
-                }`}
-              >
-                Shop
-              </Link>
-            )}
-            <Link 
-              to="/contact" 
-              className={`py-2 border-b-2 transition-all ${
-                isActive("/contact") 
-                  ? "border-green-600 text-green-600" 
-                  : "border-transparent text-gray-700 hover:text-green-600 hover:border-green-600"
-              }`}
-            >
-              Contact
-            </Link>
-          </nav>
+      {/* Main Header Content */}
+      <div className={`relative transition-all duration-300 ${isScrolled ? "py-2" : "py-4"}`}>
+        <div className="container mx-auto px-5">
+          <div className="flex justify-between items-center">
+            {/* Unified Logo and Brand Container */}
+            <Link to="/" className="group relative">
+              <div className="flex items-center">
+                {/* Unified Glassmorphism Container */}
+                <div className="relative flex items-center bg-white/20 backdrop-blur-md rounded-full pr-6 border border-white/30 shadow-lg hover:bg-white/30 transition-all duration-300">
+                  {/* Logo Section */}
+                  <div className="relative p-2">
+                    <img 
+                      src="/src/Images/logo.png" 
+                      alt="Logo" 
+                      className="h-10 w-10 object-contain" 
+                    />
+                  </div>
 
-          {/* Icons */}
-          <div className="flex items-center space-x-5">
-    
-
-            {/* Cart Button */}
-            {authUser?.role !== "admin" && (
-              <div className="flex items-center space-x-2">
-                <button
-                  className="text-gray-700 hover:text-green-600 transition-colors relative group"
-                  onClick={handleCartClick}
-                >
-                  <FaShoppingCart size={20} className="group-hover:scale-110 transition-transform" />
-                  {cartItemCount > 0 && (
-                    <span className="absolute -top-2 -right-2 bg-green-600 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                      {cartItemCount}
+                  {/* Brand Name */}
+                  <div className="relative ml-2">
+                    <span className="text-2xl font-semibold text-green-500">
+                      AgriGrow
                     </span>
-                  )}
-                </button>
-                
-                {/* Checkout Button */}
-                {cartItemCount > 0 && (
-                  <button
-                    className="bg-green-600 text-white px-3 py-1 rounded-md hover:bg-green-700 transition-colors flex items-center space-x-1"
-                    onClick={handleCheckoutClick}
-                  >
-                    <FaReceipt size={16} />
-                    <span>Checkout</span>
-                  </button>
-                )}
+                  </div>
+
+                  {/* Hover Glow Effect */}
+                  <div className="absolute inset-0 rounded-full bg-gradient-to-r from-green-500/0 via-green-500/10 to-green-500/0 opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                </div>
               </div>
-            )}
+            </Link>
 
-            {/* Chat Button */}
-            {authUser && (
+            {/* Navigation Links */}
+            <nav className="hidden md:flex items-center space-x-1">
+              {[
+                { path: "/", label: "Home" },
+                { path: "/about", label: "About" },
+                { path: "/service", label: "Services" },
+                { path: authUser?.role === "admin" ? "/products" : "/shop", 
+                  label: authUser?.role === "admin" ? "Products" : "Shop" },
+                { path: "/contact", label: "Contact" }
+              ].map((item) => (
+                <Link 
+                  key={item.path}
+                  to={item.path} 
+                  className={`
+                    relative px-4 py-2 group rounded-xl transition-all duration-300
+                    ${isActive(item.path) 
+                      ? "text-green-600" 
+                      : "text-gray-600 hover:text-green-600"
+                    }
+                  `}
+                >
+                  <span className="relative z-10">{item.label}</span>
+                  <div className={`
+                    absolute inset-0 rounded-xl transition-all duration-300 group-hover:bg-green-50/50
+                    ${isActive(item.path) ? "bg-green-50/80" : ""}
+                  `}></div>
+                  {isActive(item.path) && (
+                    <div className="absolute -bottom-px left-2 right-2 h-0.5 bg-gradient-to-r from-green-500/0 via-green-500 to-green-500/0"></div>
+                  )}
+                </Link>
+              ))}
+            </nav>
+
+            {/* Right Section: Search, Cart, Chat, Profile */}
+            <div className="flex items-center space-x-1">
+              {/* Search Button */}
               <button
-                className="text-gray-700 hover:text-green-600 transition-colors group"
-                onClick={handleChatClick}
+                onClick={() => setIsSearchOpen(!isSearchOpen)}
+                className="p-2 rounded-xl hover:bg-green-50/80 transition-all duration-300 group"
               >
-                <FaComments size={20} className="group-hover:scale-110 transition-transform" />
+                <FaSearch className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
               </button>
-            )}
 
-            {/* User Profile Button */}
-            <button
-              className="text-gray-700 hover:text-green-600 transition-colors group"
-              onClick={handleUserClick}
-            >
-              <FaUser size={20} className="group-hover:scale-110 transition-transform" />
-            </button>
+              {/* Cart Button */}
+              {authUser?.role !== "admin" && (
+                <div className="flex items-center">
+                  <button
+                    onClick={handleCartClick}
+                    className="p-2 rounded-xl hover:bg-green-50/80 transition-all duration-300 group relative"
+                  >
+                    <FaShoppingCart className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
+                    {cartItemCount > 0 && (
+                      <span className="absolute -top-1 -right-1 w-5 h-5 flex items-center justify-center text-xs font-medium text-white bg-gradient-to-r from-green-500 to-emerald-500 rounded-full shadow-lg shadow-green-500/20">
+                        {cartItemCount}
+                      </span>
+                    )}
+                  </button>
 
-            {/* Mobile Menu Button */}
-            <button
-              className="md:hidden text-gray-700 hover:text-green-600 transition-colors"
-              onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            >
-              {isMobileMenuOpen ? <FaTimes size={24} /> : <FaBars size={24} />}
-            </button>
+                  {cartItemCount > 0 && (
+                    <button
+                      onClick={handleCheckoutClick}
+                      className="ml-2 px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300 group flex items-center space-x-2"
+                    >
+                      <FaReceipt className="w-4 h-4 transition-transform group-hover:rotate-12" />
+                      <span>Checkout</span>
+                    </button>
+                  )}
+                </div>
+              )}
+
+              {/* Chat Button */}
+              {authUser && (
+                <button
+                  onClick={handleChatClick}
+                  className="p-2 rounded-xl hover:bg-green-50/80 transition-all duration-300 group relative"
+                >
+                  <FaComments className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
+                </button>
+              )}
+
+              {/* Profile Button */}
+              <button
+                onClick={handleUserClick}
+                className="p-2 rounded-xl hover:bg-green-50/80 transition-all duration-300 group relative"
+              >
+                <FaUser className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
+              </button>
+
+              {/* Mobile Menu Button */}
+              <button
+                onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
+                className="md:hidden p-2 rounded-xl hover:bg-green-50/80 transition-all duration-300 relative group"
+              >
+                <div className="w-6 space-y-1.5">
+                  <div className={`h-0.5 bg-gray-600 group-hover:bg-green-600 transition-all duration-300 ${
+                    isMobileMenuOpen ? "transform rotate-45 translate-y-2" : ""
+                  }`}></div>
+                  <div className={`h-0.5 bg-gray-600 group-hover:bg-green-600 transition-all duration-300 ${
+                    isMobileMenuOpen ? "opacity-0" : ""
+                  }`}></div>
+                  <div className={`h-0.5 bg-gray-600 group-hover:bg-green-600 transition-all duration-300 ${
+                    isMobileMenuOpen ? "transform -rotate-45 -translate-y-2" : ""
+                  }`}></div>
+                </div>
+              </button>
+            </div>
           </div>
         </div>
       </div>
 
       {/* Search Bar */}
-      {isSearchOpen && (
-        <div className="bg-gray-100 py-3 animate-fadeIn">
-          <div className="container mx-auto px-5">
+      <div className={`
+        relative transform transition-all duration-300 ease-in-out
+        ${isSearchOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'}
+      `}>
+        <div className="absolute inset-x-0 top-0 bg-white/80 backdrop-blur-md shadow-lg">
+          <div className="container mx-auto px-5 py-4">
             <form onSubmit={handleSearch} className="flex items-center">
               <input
                 type="text"
-                placeholder="Search products..."
-                className="w-full p-2 border border-gray-300 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-green-500"
+                placeholder="Search for fresh produce..."
+                className="w-full px-4 py-3 rounded-l-xl bg-white/50 border border-gray-200 focus:outline-none focus:border-green-500 transition-all duration-300"
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
               />
               <button
                 type="submit"
-                className="bg-green-600 text-white p-2 rounded-r-lg hover:bg-green-700 transition-colors"
+                className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-r-xl hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 flex items-center"
               >
-                <FaSearch />
+                <FaSearch className="w-5 h-5" />
               </button>
             </form>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Mobile Menu */}
-      {isMobileMenuOpen && (
-        <div className="md:hidden bg-white shadow-lg animate-slideDown">
-          <div className="container mx-auto px-5 py-3">
-            <nav className="flex flex-col space-y-3">
-              <Link 
-                to="/" 
-                className={`py-2 px-3 rounded-md transition-colors ${
-                  isActive("/") 
-                    ? "bg-green-100 text-green-600" 
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Home
-              </Link>
-              <Link 
-                to="/about" 
-                className={`py-2 px-3 rounded-md transition-colors ${
-                  isActive("/about") 
-                    ? "bg-green-100 text-green-600" 
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                About
-              </Link>
-              <Link 
-                to="/service" 
-                className={`py-2 px-3 rounded-md transition-colors ${
-                  isActive("/service") 
-                    ? "bg-green-100 text-green-600" 
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Services
-              </Link>
-              <Link 
-                to="/projects" 
-                className={`py-2 px-3 rounded-md transition-colors ${
-                  isActive("/projects") 
-                    ? "bg-green-100 text-green-600" 
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Projects
-              </Link>
-              {authUser?.role === "admin" ? (
+      <div className={`
+        md:hidden relative transform transition-all duration-300 ease-in-out
+        ${isMobileMenuOpen ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-full'}
+      `}>
+        <div className="absolute inset-x-0 top-0 bg-white/80 backdrop-blur-md shadow-lg">
+          <div className="container mx-auto px-5 py-4">
+            <nav className="flex flex-col space-y-1">
+              {[
+                { path: "/", label: "Home" },
+                { path: "/about", label: "About" },
+                { path: "/service", label: "Services" },
+                { path: authUser?.role === "admin" ? "/products" : "/shop", 
+                  label: authUser?.role === "admin" ? "Products" : "Shop" },
+                { path: "/contact", label: "Contact" }
+              ].map((item) => (
                 <Link 
-                  to="/products" 
-                  className={`py-2 px-3 rounded-md transition-colors ${
-                    isActive("/products") 
-                      ? "bg-green-100 text-green-600" 
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
+                  key={item.path}
+                  to={item.path} 
+                  className={`
+                    px-4 py-3 rounded-xl transition-all duration-300 group relative
+                    ${isActive(item.path) 
+                      ? "bg-green-50/80 text-green-600" 
+                      : "text-gray-600 hover:bg-green-50/50 hover:text-green-600"
+                    }
+                  `}
                   onClick={() => setIsMobileMenuOpen(false)}
                 >
-                  Products
+                  <span className="relative z-10">{item.label}</span>
+                  {isActive(item.path) && (
+                    <div className="absolute left-2 right-2 bottom-1.5 h-0.5 bg-gradient-to-r from-green-500/0 via-green-500 to-green-500/0"></div>
+                  )}
                 </Link>
-              ) : (
-                <Link 
-                  to="/shop" 
-                  className={`py-2 px-3 rounded-md transition-colors ${
-                    isActive("/shop") 
-                      ? "bg-green-100 text-green-600" 
-                      : "text-gray-700 hover:bg-gray-100"
-                  }`}
-                  onClick={() => setIsMobileMenuOpen(false)}
-                >
-                  Shop
-                </Link>
-              )}
-              <Link 
-                to="/contact" 
-                className={`py-2 px-3 rounded-md transition-colors ${
-                  isActive("/contact") 
-                    ? "bg-green-100 text-green-600" 
-                    : "text-gray-700 hover:bg-gray-100"
-                }`}
-                onClick={() => setIsMobileMenuOpen(false)}
-              >
-                Contact
-              </Link>
+              ))}
             </nav>
           </div>
         </div>
-      )}
+      </div>
 
       {/* Checkout Receipt Popup */}
       {isCheckoutOpen && (
@@ -524,3 +486,24 @@ const Header = () => {
 };
 
 export default Header;
+
+// Add this to your CSS/Tailwind config
+/*
+@keyframes slide-right {
+  from { transform: translateX(-100%); }
+  to { transform: translateX(100%); }
+}
+
+@keyframes slide-left {
+  from { transform: translateX(100%); }
+  to { transform: translateX(-100%); }
+}
+
+.animate-slide-right {
+  animation: slide-right 3s linear infinite;
+}
+
+.animate-slide-left {
+  animation: slide-left 3s linear infinite;
+}
+*/

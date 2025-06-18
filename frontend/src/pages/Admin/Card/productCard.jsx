@@ -36,7 +36,6 @@ const Card = ({ name, description, price, imageUrl, productId, onProductUpdate, 
   const [isAddingToCart, setIsAddingToCart] = useState(false);
   const [editedProduct, setEditedProduct] = useState({ name, description, price, imageUrl });
 
-  console.log("ProductCard rendering with:", { name, description, price, imageUrl, productId, onImageClick });
 
   // Handle image click
   const handleImageClick = () => {
@@ -139,159 +138,159 @@ const Card = ({ name, description, price, imageUrl, productId, onProductUpdate, 
   }, [name, description, price, imageUrl]);
 
   return (
-    <div className="bg-white rounded-xl shadow-md overflow-hidden transition-all duration-300 hover:shadow-xl border border-gray-100 h-full flex flex-col">
-      {/* Product Image Container */}
-      <div className="relative group overflow-hidden h-64">
-        <img
-          src={imageUrl || fallbackImage}
-          alt={name}
-          className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110 cursor-pointer"
-          onClick={handleImageClick}
-        />
-        <div className="absolute inset-0 bg-black bg-opacity-0 group-hover:bg-opacity-20 transition-all duration-300"></div>
-      </div>
-
-      {/* Product Info */}
-      <div className="p-6 flex flex-col flex-grow">
-        <h3 className="text-xl font-bold text-gray-800 mb-2" title={name}>{truncateText(name)}</h3>
-        <p className="text-gray-600 text-sm mb-4 line-clamp-2 flex-grow">{description}</p>
-        <div className="flex items-center justify-between mb-6">
-          <span className="text-2xl font-bold text-green-600">{formatPrice(price)}</span>
+    <div className="group">
+      {/* Main Card Container */}
+      <div className="bg-white/80 backdrop-blur-sm rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all duration-300 h-full flex flex-col max-w-[280px]">
+        {/* Product Image Container */}
+        <div className="relative overflow-hidden w-full" style={{ height: '200px' }}>
+          <img
+            src={imageUrl || fallbackImage}
+            alt={name}
+            className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-105"
+            onClick={handleImageClick}
+          />
+          {/* Subtle gradient overlay */}
+          <div className="absolute inset-0 bg-gradient-to-t from-black/5 to-transparent"></div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex justify-between gap-3 mt-auto">
-          {authUser?.role === "admin" ? (
-            <>
-              <button
-                onClick={handleEditProduct}
-                className="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-                disabled={isEditing || isDeleting}
-              >
-                {isEditing ? (
-                  <>
-                    <Loader className="size-4 animate-spin" />
-                    Editing...
-                  </>
-                ) : (
-                  <>
-                    <Edit className="size-4" />
-                    Edit
-                  </>
-                )}
-              </button>
-              <button
-                onClick={handleDeleteProduct}
-                className="flex-1 bg-red-600 text-white px-4 py-3 rounded-lg hover:bg-red-700 transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-                disabled={isEditing || isDeleting}
-              >
-                {isDeleting ? (
-                  <>
-                    <Loader className="size-4 animate-spin" />
-                    Deleting...
-                  </>
-                ) : (
-                  <>
-                    <Trash2 className="size-4" />
-                    Delete
-                  </>
-                )}
-              </button>
-            </>
-          ) : (
-            <>
-              <button
-                onClick={handleImageClick}
-                className="flex-1 bg-gray-200 text-gray-800 px-4 py-3 rounded-lg hover:bg-gray-300 transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-              >
-                <Info className="size-4" />
-                Details
-              </button>
-              <button
-                onClick={handleAddToCart}
-                className="flex-1 bg-green-600 text-white px-4 py-3 rounded-lg hover:bg-green-700 transition-colors flex items-center justify-center gap-2 shadow-sm hover:shadow-md"
-                disabled={isAddingToCart}
-              >
-                {isAddingToCart ? (
-                  <>
-                    <Loader className="size-4 animate-spin" />
-                    Adding...
-                  </>
-                ) : (
-                  <>
-                    <ShoppingCart className="size-4" />
-                    Add to Cart
-                  </>
-                )}
-              </button>
-            </>
-          )}
+        {/* Product Info */}
+        <div className="p-4 flex flex-col flex-grow bg-white/50 backdrop-blur-sm">
+          <h3 className="text-base font-medium text-gray-800 mb-1" title={name}>
+            {truncateText(name, 35)}
+          </h3>
+          <p className="text-gray-600 text-xs mb-3 line-clamp-2 flex-grow">
+            {description}
+          </p>
+          
+          {/* Price and Actions Container */}
+          <div className="flex items-center justify-between mt-auto">
+            <span className="text-lg font-semibold text-green-600">
+              {formatPrice(price)}
+            </span>
+
+            <div className="flex gap-1">
+              {authUser?.role === "admin" ? (
+                <>
+                  <button
+                    onClick={handleEditProduct}
+                    className="p-1.5 text-gray-600 hover:text-green-600 transition-colors"
+                    disabled={isEditing || isDeleting}
+                  >
+                    {isEditing ? (
+                      <Loader className="size-4 animate-spin" />
+                    ) : (
+                      <Edit className="size-4" />
+                    )}
+                  </button>
+                  <button
+                    onClick={handleDeleteProduct}
+                    className="p-1.5 text-gray-600 hover:text-red-600 transition-colors"
+                    disabled={isEditing || isDeleting}
+                  >
+                    {isDeleting ? (
+                      <Loader className="size-4 animate-spin" />
+                    ) : (
+                      <Trash2 className="size-4" />
+                    )}
+                  </button>
+                </>
+              ) : (
+                <>
+                  <button
+                    onClick={handleImageClick}
+                    className="p-1.5 text-gray-600 hover:text-green-600 transition-colors"
+                  >
+                    <Info className="size-4" />
+                  </button>
+                  <button
+                    onClick={handleAddToCart}
+                    className="flex items-center gap-1 px-3 py-1.5 bg-green-500/90 backdrop-blur-sm text-white text-sm rounded-full hover:bg-green-600/90 transition-colors disabled:opacity-50"
+                    disabled={isAddingToCart}
+                  >
+                    {isAddingToCart ? (
+                      <>
+                        <Loader className="size-3 animate-spin" />
+                        <span>Adding...</span>
+                      </>
+                    ) : (
+                      <>
+                        <ShoppingCart className="size-3" />
+                        <span>Add to Cart</span>
+                      </>
+                    )}
+                  </button>
+                </>
+              )}
+            </div>
+          </div>
         </div>
       </div>
 
       {/* Edit Product Modal */}
       {showEditModal && (
-        <div className="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50">
-          <div className="bg-white p-8 rounded-xl shadow-xl w-96 max-w-[90%]">
-            <h2 className="text-2xl font-bold mb-6 text-gray-800">Edit Product</h2>
+        <div className="fixed inset-0 bg-black/30 backdrop-blur-sm flex justify-center items-center z-50">
+          <div className="bg-white/90 backdrop-blur-md p-6 rounded-2xl shadow-xl w-80 max-w-[90%] border border-white/30">
+            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+              Edit Product
+            </h2>
 
-            {/* Name input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
-              <input
-                type="text"
-                placeholder="Product Name"
-                value={editedProduct.name || ""}
-                onChange={(e) => setEditedProduct({ ...editedProduct, name: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                disabled={isEditing}
-              />
-            </div>
+            {/* Form Fields */}
+            <div className="space-y-3">
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Product Name</label>
+                <input
+                  type="text"
+                  placeholder="Product Name"
+                  value={editedProduct.name || ""}
+                  onChange={(e) => setEditedProduct({ ...editedProduct, name: e.target.value })}
+                  className="w-full px-3 py-2 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                  disabled={isEditing}
+                />
+              </div>
 
-            {/* Description input */}
-            <div className="mb-4">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
-              <textarea
-                placeholder="Product Description"
-                value={editedProduct.description || ""}
-                onChange={(e) => setEditedProduct({ ...editedProduct, description: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                disabled={isEditing}
-                rows="3"
-              />
-            </div>
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Description</label>
+                <textarea
+                  placeholder="Product Description"
+                  value={editedProduct.description || ""}
+                  onChange={(e) => setEditedProduct({ ...editedProduct, description: e.target.value })}
+                  className="w-full px-3 py-2 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                  disabled={isEditing}
+                  rows="3"
+                />
+              </div>
 
-            {/* Price input */}
-            <div className="mb-6">
-              <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
-              <input
-                type="number"
-                placeholder="Price"
-                value={editedProduct.price || ""}
-                onChange={(e) => setEditedProduct({ ...editedProduct, price: e.target.value })}
-                className="w-full px-4 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent"
-                disabled={isEditing}
-              />
+              <div>
+                <label className="block text-sm font-medium text-gray-700 mb-1">Price</label>
+                <input
+                  type="number"
+                  placeholder="Price"
+                  value={editedProduct.price || ""}
+                  onChange={(e) => setEditedProduct({ ...editedProduct, price: e.target.value })}
+                  className="w-full px-3 py-2 bg-white/70 backdrop-blur-sm border border-gray-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-transparent transition-all duration-300"
+                  disabled={isEditing}
+                />
+              </div>
             </div>
 
             {/* Modal Buttons */}
-            <div className="flex justify-end gap-3">
+            <div className="flex justify-end gap-2 mt-4">
               <button
                 onClick={() => setShowEditModal(false)}
-                className="px-4 py-2 bg-gray-200 text-gray-800 rounded-lg hover:bg-gray-300 transition-colors"
+                className="px-3 py-1.5 text-gray-600 hover:text-gray-800 transition-colors"
                 disabled={isEditing}
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveChanges}
-                className="px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors flex items-center gap-2"
+                className="px-3 py-1.5 bg-green-500/90 backdrop-blur-sm text-white text-sm rounded-full hover:bg-green-600/90 transition-colors flex items-center gap-1 disabled:opacity-50"
                 disabled={isEditing}
               >
                 {isEditing ? (
                   <>
-                    <Loader className="size-4 animate-spin" />
-                    Saving...
+                    <Loader className="size-3 animate-spin" />
+                    <span>Saving...</span>
                   </>
                 ) : (
                   "Save Changes"
