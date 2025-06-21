@@ -214,6 +214,7 @@ const Header = () => {
                 { path: "/", label: "Home" },
                 { path: "/about", label: "About" },
                 { path: "/service", label: "Services" },
+                { path: "/blog", label: "Blog" },
                 { path: authUser?.role === "admin" ? "/products" : "/shop", 
                   label: authUser?.role === "admin" ? "Products" : "Shop" },
                 { path: "/contact", label: "Contact" }
@@ -356,6 +357,7 @@ const Header = () => {
                 { path: "/", label: "Home" },
                 { path: "/about", label: "About" },
                 { path: "/service", label: "Services" },
+                { path: "/blog", label: "Blog" },
                 { path: authUser?.role === "admin" ? "/products" : "/shop", 
                   label: authUser?.role === "admin" ? "Products" : "Shop" },
                 { path: "/contact", label: "Contact" }
