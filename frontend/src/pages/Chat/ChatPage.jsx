@@ -9,12 +9,11 @@ const ChatPage = () => {
   const { selectedUser } = useChatStore();
 
   return (
-    <div className="h-screen bg-base-200 pt-[4rem]"> {/* Added padding-top to avoid Navbar overlap */}
-      <div className="flex items-center justify-center px-4">
-        <div className="bg-base-100 rounded-lg shadow-cl w-full max-w-6xl h-[calc(100vh-4rem)]"> {/* Adjusted height */}
-          <div className=" flex h-full rounded-lg overflow-hidden p-20">
+    <div className="h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-[4rem]">
+      <div className="flex items-center justify-center px-4 mt-8">
+        <div className="bg-white/30 backdrop-blur-xl rounded-3xl shadow-2xl w-full max-w-6xl h-[calc(100vh-4rem-2rem)] border border-white/50">
+          <div className="flex h-full rounded-3xl overflow-hidden">
             <Sidebar />
-
             {!selectedUser ? <NoChatSelected /> : <ChatContainer />}
           </div>
         </div>

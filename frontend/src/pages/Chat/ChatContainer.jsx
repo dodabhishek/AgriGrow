@@ -48,10 +48,13 @@ const ChatContainer = () => {
   }
 
   return (
-    <div className="flex-1 flex flex-col h-full">
+    <div className="flex-1 flex flex-col h-full bg-gradient-to-br from-white/60 via-green-50/60 to-emerald-50/60">
       <ChatHeader />
-
-      <div ref={chatContainerRef} className="flex-1 overflow-y-auto p-4 space-y-4">
+      <div
+        ref={chatContainerRef}
+        className="flex-1 overflow-y-auto p-8 space-y-6"
+        style={{ minHeight: 0 }}
+      >
         {messages.map((message, index) => {
           const isSender = message.senderId === authUser._id;
           const profilePic = isSender
@@ -62,34 +65,35 @@ const ChatContainer = () => {
           return (
             <div
               key={message._id || index}
-              className={`flex items-start gap-2 ${
+              className={`flex items-end gap-3 group animate-fadeInUp ${
                 isSender ? "justify-end" : "justify-start"
               }`}
               ref={index === messages.length - 1 ? messageEndRef : null}
             >
+              {/* Avatar for received messages */}
               {!isSender && (
                 <img
                   src={profilePic}
-                  className="w-10 h-10 rounded-full border"
+                  className="w-10 h-10 rounded-full border-2 border-green-200 shadow-md"
                   alt="profile"
                 />
               )}
 
-              <div className="max-w-[70%]">
+              <div className="max-w-[70%] flex flex-col items-start">
                 <div
-                  className={`text-sm font-semibold mb-1 ${
-                    isSender ? "text-right" : "text-left"
+                  className={`text-xs font-semibold mb-1 ${
+                    isSender ? "text-right text-green-700" : "text-left text-emerald-700"
                   }`}
                 >
                   {displayName}
                 </div>
-
                 <div
-                  className={`p-3 rounded-xl ${
+                  className={`p-4 rounded-2xl shadow-md transition-all duration-300 ${
                     isSender
-                      ? "bg-blue-500 text-white rounded-br-none"
-                      : "bg-gray-200 text-black dark:bg-gray-700 dark:text-white rounded-bl-none"
-                  }`}
+                      ? "bg-gradient-to-br from-green-500 to-emerald-500 text-white rounded-br-none"
+                      : "bg-white/60 backdrop-blur-md text-gray-900 rounded-bl-none border border-white/50"
+                  } animate-fadeInUp`}
+                  style={{ wordBreak: "break-word" }}
                 >
                   {message.image && (
                     <img
@@ -105,10 +109,11 @@ const ChatContainer = () => {
                 </div>
               </div>
 
+              {/* Avatar for sent messages */}
               {isSender && (
                 <img
                   src={profilePic}
-                  className="w-10 h-10 rounded-full border"
+                  className="w-10 h-10 rounded-full border-2 border-green-200 shadow-md"
                   alt="profile"
                 />
               )}
@@ -116,8 +121,22 @@ const ChatContainer = () => {
           );
         })}
       </div>
-
       <MessageInput />
+      <style jsx>{`
+        @keyframes fadeInUp {
+          from {
+            opacity: 0;
+            transform: translateY(20px);
+          }
+          to {
+            opacity: 1;
+            transform: translateY(0);
+          }
+        }
+        .animate-fadeInUp {
+          animation: fadeInUp 0.5s ease-out;
+        }
+      `}</style>
     </div>
   );
 };
