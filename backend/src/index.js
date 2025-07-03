@@ -29,19 +29,22 @@ app.use(express.json({ limit: '50mb' }));
 app.use(express.urlencoded({ extended: true, limit: '50mb' }));
 
 // Routes
-console.log('✅ Mounting routes...');
+
 app.use('/api/auth', authRoutes);
 app.use('/api/messages', messageRoutes);
 app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 
 // Serve frontend
+// filepath: /Users/abhishekdod/Desktop/Academic/Project/backend/src/index.js
+// ...existing code...
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
-    app.get('/{*splat}', (req, res) => {
+    app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
     });
-  }
+}
+// ...existing code...
 
 // Start server
 server.listen(PORT, () => {
