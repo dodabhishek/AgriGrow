@@ -4,7 +4,6 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import path from 'path';
 import { fileURLToPath } from 'url';
-
 import { connectDB } from './lib/db.js';
 import { app, server } from './lib/socket.js';
 import authRoutes from './routes/auth.route.js';
