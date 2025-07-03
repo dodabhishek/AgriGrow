@@ -15,7 +15,7 @@ dotenv.config();
 
 // Get the directory path for ES modules
 const __filename = fileURLToPath(import.meta.url);
-const __dirname = path.dirname(__filename);
+const __dirname = path.resolve();
 
 const PORT = process.env.PORT || 3000;
 
@@ -37,12 +37,11 @@ app.use('/api/cart', cartRoutes);
 
 // Serve static files from the React app in production
 if (process.env.NODE_ENV === 'production') {
-    const distPath = path.resolve(__dirname, '../..', 'frontend', 'dist');
-    app.use(express.static(distPath));
-    
-    app.get('/*', (req, res) => {
-        res.sendFile(path.join(distPath, 'index.html'));
-    });
+  app.use(express.static(path.join(__dirname,'../frontend/dist')));
+
+  app.get('/*', (req, res) => {
+    res.sendFile(path.join(__dirname,'../frontend',"dist","index.html"));
+  });
 }
 
 // Error handling middleware
