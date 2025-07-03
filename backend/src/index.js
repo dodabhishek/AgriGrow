@@ -9,12 +9,11 @@ import cors from 'cors';
 import dotenv from 'dotenv';
 import { app, server } from './lib/socket.js';
 import path from 'path';
-import { fileURLToPath } from 'url';
+
 
 dotenv.config();
 
 // Get the directory path for ES modules
-const __filename = fileURLToPath(import.meta.url);
 const __dirname = path.resolve();
 
 const PORT = process.env.PORT || 3000;
@@ -36,19 +35,15 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 
 // Serve static files from the React app in production
-if (process.env.NODE_ENV === 'production') {
-  app.use(express.static(path.join(__dirname,'../frontend/dist')));
 
-  app.get('/*', (req, res) => {
-    res.sendFile(path.join(__dirname,'../frontend',"dist","index.html"));
-  });
-}
+if(process.env.NODE_ENV === 'production'){
+    app.use(express.static(path.join(__dirname, '../frontend/dist')));
+    app.get('/(.*)', (req, res) => {
+      res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
+    });
+  }
 
-// // Error handling middleware
-app.use((err, req, res, next) => {
-    console.error(err.stack);
-    res.status(500).send('Something broke!');
-});
+
 
 // Start the server
 server.listen(PORT, () => {
