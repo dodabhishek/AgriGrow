@@ -1,0 +1,21 @@
+# render.yaml
+services:
+  - type: web
+    name: agrigrow-backend
+    env: node
+    plan: free
+    buildCommand: cd backend && npm install
+    startCommand: cd backend && node index.js
+    envVars:
+      - key: NODE_ENV
+        value: production
+      - key: MONGO_URI
+        value: <YOUR_MONGO_URI>     # set this securely later in dashboard or here
+      - key: JWT_SECRET
+        value: <YOUR_SECRET>
+
+  - type: static
+    name: agrigrow-frontend
+    env: static
+    buildCommand: cd frontend && npm install && npm run build
+    staticPublishPath: frontend/dist
