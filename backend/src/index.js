@@ -36,15 +36,12 @@ app.use('/api/products', productRoutes);
 app.use('/api/cart', cartRoutes);
 
 // Serve frontend
-// filepath: /Users/abhishekdod/Desktop/Academic/Project/backend/src/index.js
-// ...existing code...
 if(process.env.NODE_ENV === 'production'){
     app.use(express.static(path.join(__dirname, '../frontend/dist')));
     app.get('*', (req, res) => {
       res.sendFile(path.join(__dirname, '../frontend', 'dist', 'index.html'));
     });
-}
-// ...existing code...
+  }
 
 // Start server
 server.listen(PORT, () => {
