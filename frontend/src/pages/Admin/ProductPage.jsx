@@ -5,7 +5,7 @@ import Card from "./Card/productCard";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Loader, ChevronLeft, ChevronRight, Plus, Package, Search, X } from "lucide-react";
 import { FaSearch, FaTimes } from "react-icons/fa";
-import shopBackground from "../../Images/shopBackground.jpg";
+import shopBackground from "../../assets/Images/shopBackground.jpg";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);

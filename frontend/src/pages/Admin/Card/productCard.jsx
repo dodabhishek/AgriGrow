@@ -1,9 +1,10 @@
-import { useState, useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useAuthStore } from "../../../store/useAuthStore";
 import { axiosInstance } from "../../../lib/axios";
-import React from "react";
-import { Loader, ShoppingCart, Edit, Trash2, Info } from "lucide-react";
-import toast from "react-hot-toast";
+import { toast } from "react-hot-toast";
+import { Loader, ShoppingCart, Edit, Trash2, Info, Eye } from "lucide-react";
+import { FaTimes } from "react-icons/fa";
+import Basket from "../../../assets/Images/Basket.jpg";
 
 // Helper function to truncate text
 const truncateText = (text, maxLength = 30) => {
@@ -29,7 +30,7 @@ const formatPrice = (price) => {
 
 const Card = ({ name, description, price, imageUrl, productId, onProductUpdate, onProductDelete, onImageClick }) => {
   const { authUser } = useAuthStore(); // Get the logged-in user
-  const fallbackImage = "/images/Basket.jpg"; // Default image if product image is not available
+  const fallbackImage = Basket; // Default image if product image is not available
   const [showEditModal, setShowEditModal] = useState(false);
   const [isEditing, setIsEditing] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);

@@ -1,5 +1,8 @@
 import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { Mail, Phone, MapPin, Clock, Send, CheckCircle } from "lucide-react";
 import { FaPhone, FaEnvelope, FaClock, FaMapMarkerAlt, FaPaperPlane, FaUser, FaComments, FaGlobe, FaHeadset, FaShieldAlt, FaTruck, FaCreditCard } from "react-icons/fa";
+import ContactImg from "../../assets/Images/Contact.jpg";
 
 const Contact = () => {
   const [formData, setFormData] = useState({
@@ -45,7 +48,7 @@ const Contact = () => {
             </p>
           </div>
           <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-            <img src="/src/Images/Contact.jpg" alt="Contact Us" className="w-full h-96 object-cover" />
+            <img src={ContactImg} alt="Contact Us" className="w-full h-96 object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
           </div>
         </div>

@@ -1,6 +1,10 @@
 import React from "react";
-import { FaLeaf, FaTractor, FaSeedling, FaArrowRight, FaStar, FaCheckCircle, FaRobot, FaUsers, FaTools, FaMobileAlt, FaCloudSunRain, FaGraduationCap, FaMicroscope, FaFlask, FaSeedling as FaSeed, FaHandshake, FaVideo, FaComments } from "react-icons/fa";
+import { FaLeaf, FaTractor, FaSeedling, FaArrowRight, FaStar, FaCheckCircle, FaRobot, FaUsers, FaTools, FaMobileAlt, FaCloudSunRain, FaGraduationCap, FaMicroscope, FaFlask, FaHandshake, FaVideo, FaComments } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import { ArrowRight, CheckCircle, Star, Users, Award, TrendingUp } from "lucide-react";
+import HomeBg from "../../assets/Images/HomeBg.png";
+import HomePage2Lg from "../../assets/Images/HomePage2Lg.jpg";
+import HomePage2Sm from "../../assets/Images/HomePage2Sm.jpg";
 
 const Home = () => {
   return (
@@ -8,10 +12,10 @@ const Home = () => {
       {/* Hero Section with enhanced glassmorphism */}
       <section
         className="relative bg-cover bg-center min-h-screen flex items-center text-white"
-        style={{ 
-          backgroundImage: "url('/src/images/HomeBg.png')",
-          backgroundAttachment: "fixed" 
-        }}
+                  style={{ 
+            backgroundImage: `url(${HomeBg})`,
+            backgroundAttachment: "fixed" 
+          }}
       >
         <div className="absolute inset-0 bg-gradient-to-br from-gray-900/80 via-gray-800/70 to-transparent"></div>
         <div className="container mx-auto px-5 relative z-10">
@@ -157,8 +161,8 @@ const Home = () => {
             <div className="relative">
               <div className="absolute inset-0 bg-gradient-to-br from-green-100/30 via-emerald-100/30 to-teal-100/30 backdrop-blur-xl rounded-full"></div>
               <div className="relative flex justify-center">
-                <img src="/src/Images/HomePage2Lg.jpg" alt="Modern Farming" className="w-96 h-96 rounded-full border-8 border-white/50 shadow-lg object-cover" />
-                <img src="/src/Images/HomePage2Sm.jpg" alt="Smart Agriculture" className="w-56 h-56 rounded-full border-8 border-white/50 shadow-lg absolute -bottom-8 -left-8 object-cover" />
+                <img src={HomePage2Lg} alt="Modern Farming" className="w-96 h-96 rounded-full border-8 border-white/50 shadow-lg object-cover" />
+                <img src={HomePage2Sm} alt="Smart Agriculture" className="w-56 h-56 rounded-full border-8 border-white/50 shadow-lg absolute -bottom-8 -left-8 object-cover" />
               </div>
             </div>
           </div>
@@ -381,7 +385,7 @@ const Home = () => {
                 description: "Research-based guidance on crop varieties, diseases, and farming techniques."
               },
               {
-                icon: FaSeed,
+                icon: FaSeedling,
                 title: "Crop Specialists",
                 description: "Specialized knowledge in specific crop types and their cultivation methods."
               }
@@ -493,7 +497,7 @@ const Home = () => {
       {/* CTA Section with enhanced glassmorphism */}
       <section className="py-24 relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-50 via-emerald-50/80 to-green-50/90"></div>
-        <div className="absolute inset-0 bg-[url('/src/Images/HomeBg.png')] opacity-5"></div>
+        <div className="absolute inset-0 bg-[url(${HomeBg})] opacity-5"></div>
         
         <div className="container mx-auto px-5 relative z-10">
           <div className="max-w-5xl mx-auto bg-white/60 backdrop-blur-lg rounded-3xl border border-green-100 shadow-xl p-12">

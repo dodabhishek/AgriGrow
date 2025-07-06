@@ -4,6 +4,8 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { Loader, Trash2, CreditCard, Receipt, CheckCircle, XCircle, Plus, Minus, ShoppingCart, Truck, ArrowRight, Lock } from "lucide-react";
 import toast from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
+import Basket from "../../assets/Images/Basket.jpg";
+import cartBackground from "../../assets/Images/cartBackground.jpg";
 
 const CartPage = () => {
   const [cartItems, setCartItems] = useState([]);
@@ -299,11 +301,11 @@ const CartPage = () => {
           <div className="flex gap-6">
             <div className="relative overflow-hidden rounded-xl border-2 border-emerald-100/50">
               <img
-                src={imageUrl || '/src/Images/placeholder.jpg'} // Add a placeholder image
+                src={imageUrl || Basket} // Add a placeholder image
                 alt={name}
                 className="w-32 h-32 object-cover"
                 onError={(e) => {
-                  e.target.src = '/src/Images/placeholder.jpg'; // Fallback image on error
+                  e.target.src = Basket; // Fallback image on error
                 }}
               />
             </div>
@@ -369,7 +371,7 @@ const CartPage = () => {
       {/* Hero Section */}
       <div 
         className="relative h-[500px] bg-cover bg-center"
-        style={{ backgroundImage: 'url("/src/Images/cartBackground.jpg")' }}
+        style={{ backgroundImage: `url(${cartBackground})` }}
       >
         {/* Gradient Overlay */}
         <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/30 to-transparent"></div>
@@ -527,7 +529,7 @@ const CartPage = () => {
                       {cartItems.map((item) => (
                         <div key={item.productId._id} className="flex items-center gap-4 py-3 border-b border-gray-100">
                           <img 
-                            src={item.productId.imageUrl} 
+                            src={item.productId.imageUrl || Basket} 
                             alt={item.productId.name} 
                             className="w-16 h-16 object-cover rounded-lg"
                           />

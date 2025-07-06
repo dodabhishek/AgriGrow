@@ -2,7 +2,8 @@ import User from "../models/user.model.js";
 
 // Add product to cart
 export const addToCart = async (req, res) => {
-  const { userId, productId } = req.body;
+  const { productId } = req.body;
+  const userId = req.user._id;
 
   try {
     const user = await User.findById(userId);
@@ -30,7 +31,7 @@ export const addToCart = async (req, res) => {
 
 // Get user's cart
 export const getCart = async (req, res) => {
-  const { userId } = req.query;
+  const userId = req.user._id;
 
   try {
     const user = await User.findById(userId).populate("cart.productId");
@@ -47,7 +48,8 @@ export const getCart = async (req, res) => {
 };
 
 export const updateCartProduct = async (req, res) => {
-    const { userId, productId, quantity } = req.body;
+    const { productId, quantity } = req.body;
+    const userId = req.user._id;
   
     try {
       const user = await User.findById(userId);
@@ -80,3 +82,24 @@ export const updateCartProduct = async (req, res) => {
       res.status(500).json({ message: "Failed to update cart product" });
     }
   };
+
+// Clear user's cart
+export const clearCart = async (req, res) => {
+  const userId = req.user._id;
+
+  try {
+    const user = await User.findById(userId);
+
+    if (!user) {
+      return res.status(404).json({ message: "User not found" });
+    }
+
+    user.cart = [];
+    await user.save();
+
+    res.status(200).json({ message: "Cart cleared successfully", cart: user.cart });
+  } catch (error) {
+    console.error("Error clearing cart:", error.message);
+    res.status(500).json({ message: "Failed to clear cart" });
+  }
+};

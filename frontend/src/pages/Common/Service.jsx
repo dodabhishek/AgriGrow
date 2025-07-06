@@ -1,5 +1,16 @@
 import React, { useState } from "react";
-import { FaPlay, FaLeaf, FaSeedling, FaTractor, FaUsers, FaGraduationCap, FaTools, FaMobileAlt, FaCloudSunRain, FaHandshake, FaCheckCircle, FaArrowRight } from "react-icons/fa";
+import { Link } from "react-router-dom";
+import { ArrowRight, CheckCircle, Star, Users, Award, TrendingUp } from "lucide-react";
+import { FaTractor, FaLeaf, FaSeedling, FaUsers, FaCheckCircle, FaStar, FaAward } from "react-icons/fa";
+import ServiceImg from "../../assets/Images/Service.jpg";
+import service1 from "../../assets/Images/service1.jpg";
+import service2 from "../../assets/Images/service2.jpg";
+import service3 from "../../assets/Images/service3.jpg";
+import service4 from "../../assets/Images/service4.jpg";
+import category1 from "../../assets/Images/category1.jpg";
+import category2 from "../../assets/Images/category2.jpg";
+import category3 from "../../assets/Images/category3.jpg";
+import healthyFood from "../../assets/Images/healthy-food.jpg";
 
 const Service = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -25,7 +36,7 @@ const Service = () => {
             </p>
           </div>
           <div className="relative rounded-3xl overflow-hidden shadow-2xl">
-            <img src="/src/Images/Service.jpg" alt="Agricultural Services" className="w-full h-96 object-cover" />
+            <img src={ServiceImg} alt="Agricultural Services" className="w-full h-96 object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-transparent to-transparent"></div>
           </div>
         </div>
@@ -53,25 +64,25 @@ const Service = () => {
             {[
               { 
                 title: 'Agriculture Products', 
-                image: '/src/Images/service1.jpg',
+                image: service1,
                 description: 'High-quality farming products and equipment for modern agriculture.',
                 icon: FaTractor
               },
               { 
                 title: 'Organic Products', 
-                image: '/src/Images/service2.jpg',
+                image: service2,
                 description: 'Certified organic farming solutions and sustainable practices.',
                 icon: FaLeaf
               },
               { 
                 title: 'Fresh Vegetables', 
-                image: '/src/Images/service3.jpg',
+                image: service3,
                 description: 'Direct-from-farm fresh vegetables and produce delivery.',
                 icon: FaSeedling
               },
               { 
                 title: 'Dairy Products', 
-                image: '/src/Images/service4.jpg',
+                image: service4,
                 description: 'Premium dairy products from sustainable farming practices.',
                 icon: FaUsers
               }
@@ -103,7 +114,7 @@ const Service = () => {
                   <p className="text-gray-600 mb-6 leading-relaxed">{service.description}</p>
                   <button className="w-full bg-gradient-to-r from-green-600 to-emerald-600 text-white px-6 py-3 rounded-xl hover:shadow-lg transition-all duration-300 transform hover:scale-105 font-medium flex items-center justify-center gap-2">
                     Learn More
-                    <FaArrowRight className="group-hover:translate-x-1 transition-transform" />
+                    <ArrowRight className="group-hover:translate-x-1 transition-transform" />
                   </button>
                 </div>
               </div>
@@ -140,7 +151,7 @@ const Service = () => {
                 >
                   <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-full -m-2"></div>
                   <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 group-hover:bg-white">
-                    <FaPlay className="w-12 h-12 text-green-600 transform group-hover:scale-110 transition-transform" />
+                    <ArrowRight className="w-12 h-12 text-green-600 transform group-hover:scale-110 transition-transform" />
                   </div>
                 </button>
               </div>
@@ -176,19 +187,19 @@ const Service = () => {
             {[
               { 
                 title: 'Quality Standards', 
-                image: '/src/Images/category1.jpg',
+                image: category1,
                 description: 'Rigorous quality control processes ensure the best products and services.',
                 features: ['Certified Products', 'Quality Testing', 'Standards Compliance']
               },
               { 
                 title: 'Organic Farming', 
-                image: '/src/Images/category2.jpg',
+                image: category2,
                 description: 'Sustainable organic farming practices that protect the environment.',
                 features: ['Chemical-Free', 'Sustainable', 'Eco-Friendly']
               },
               { 
                 title: 'Agriculture Products', 
-                image: '/src/Images/category3.jpg',
+                image: category3,
                 description: 'Premium agricultural products for modern farming needs.',
                 features: ['High Quality', 'Reliable', 'Innovative']
               }
@@ -216,7 +227,7 @@ const Service = () => {
                   <div className="space-y-2">
                     {category.features.map((feature, featureIndex) => (
                       <div key={featureIndex} className="flex items-center gap-3">
-                        <FaCheckCircle className="text-green-600 text-sm" />
+                        <CheckCircle className="text-green-600 text-sm" />
                         <span className="text-gray-700 text-sm">{feature}</span>
                       </div>
                     ))}
@@ -237,7 +248,7 @@ const Service = () => {
               <div className="absolute inset-0 bg-gradient-to-br from-green-100/50 via-emerald-100/50 to-teal-100/50 backdrop-blur-xl rounded-3xl -m-6"></div>
               <div className="relative rounded-3xl overflow-hidden shadow-2xl transform hover:scale-[1.02] transition-all duration-500">
                 <img 
-                  src="/src/Images/healthy-food.jpg" 
+                  src={healthyFood} 
                   alt="Healthy Food" 
                   className="w-full h-96 object-cover" 
                 />
@@ -263,7 +274,7 @@ const Service = () => {
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
                 {[
                   { name: 'Harvesting', icon: FaSeedling },
-                  { name: 'Maintenance', icon: FaTools },
+                  { name: 'Maintenance', icon: FaTractor },
                   { name: 'Housing', icon: FaUsers }
                 ].map((feature, index) => (
                   <button 

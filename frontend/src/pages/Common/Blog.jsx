@@ -1,5 +1,11 @@
 import React, { useState } from 'react';
+import { Link } from "react-router-dom";
 import { Calendar, Clock, User, ArrowRight, Search, Filter, BookOpen, Sparkles } from 'lucide-react';
+import OrganicProducts from "../../assets/Images/OrganicProducts.jpg";
+import healthyFood from "../../assets/Images/healthy-food.jpg";
+import farmer1 from "../../assets/Images/farmer1.jpg";
+import farmer2 from "../../assets/Images/farmer2.jpg";
+import Basket from "../../assets/Images/Basket.jpg";
 
 const Blog = () => {
   const [searchQuery, setSearchQuery] = useState('');
@@ -20,7 +26,7 @@ The difference is noticeable in taste too. Many customers report that organic ve
       date: "2024-01-15",
       readTime: "5 min read",
       category: "health",
-      image: "/src/Images/OrganicProducts.jpg",
+      image: OrganicProducts,
       tags: ["organic", "health", "nutrition"]
     },
     {
@@ -36,7 +42,7 @@ Our farmers carefully plan their crop rotations to ensure a steady supply of fre
       date: "2024-01-12",
       readTime: "4 min read",
       category: "seasonal",
-      image: "/src/Images/healthy-food.jpg",
+      image: healthyFood,
       tags: ["seasonal", "fresh", "local"]
     },
     {
@@ -52,7 +58,7 @@ By supporting sustainable agriculture, you're helping to preserve our planet for
       date: "2024-01-10",
       readTime: "6 min read",
       category: "sustainability",
-      image: "/src/Images/farmer1.jpg",
+      image: farmer1,
       tags: ["sustainability", "environment", "farming"]
     },
     {
@@ -68,7 +74,7 @@ This rapid farm-to-table process means you're getting vegetables that are not on
       date: "2024-01-08",
       readTime: "4 min read",
       category: "supply-chain",
-      image: "/src/Images/Basket.jpg",
+      image: Basket,
       tags: ["fresh", "local", "quality"]
     },
     {
@@ -84,7 +90,7 @@ These recipes are designed to be flexible, allowing you to substitute ingredient
       date: "2024-01-05",
       readTime: "7 min read",
       category: "recipes",
-      image: "/src/Images/healthy-food.jpg",
+      image: healthyFood,
       tags: ["recipes", "healthy", "quick-meals"]
     },
     {
@@ -102,7 +108,7 @@ The result is higher yields, better quality produce, and reduced environmental i
       date: "2024-01-03",
       readTime: "5 min read",
       category: "technology",
-      image: "/src/Images/farmer2.jpg",
+      image: farmer2,
       tags: ["technology", "innovation", "farming"]
     }
   ];

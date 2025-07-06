@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from "react";
 import {
-  FaSearch,
   FaShoppingCart,
   FaUser,
   FaComments,
@@ -13,6 +12,9 @@ import {
 } from "react-icons/fa";
 import { Link, useNavigate, useLocation } from "react-router-dom";
 import { useAuthStore } from "../store/useAuthStore";
+import logo from "../assets/Images/logo.png";
+import Basket from "../assets/Images/Basket.jpg";
+import { axiosInstance } from "../lib/axios";
 
 const Header = () => {
   const { authUser } = useAuthStore();
@@ -30,11 +32,7 @@ const Header = () => {
   // Handle scroll effect
   useEffect(() => {
     const handleScroll = () => {
-      if (window.scrollY > 50) {
-        setIsScrolled(true);
-      } else {
-        setIsScrolled(false);
-      }
+      setIsScrolled(window.scrollY > 20);
     };
 
     window.addEventListener("scroll", handleScroll);
@@ -46,11 +44,8 @@ const Header = () => {
     const fetchCartItems = async () => {
       try {
         if (authUser) {
-          const response = await fetch(`/api/cart/${authUser._id}`);
-          if (response.ok) {
-            const data = await response.json();
-            setCartItems(data.items || []);
-          }
+          const response = await axiosInstance.get("/cart");
+          setCartItems(response.data.cart || []);
         } else {
           // For non-logged in users, check localStorage
           const localCart = JSON.parse(localStorage.getItem('cart')) || [];
@@ -93,8 +88,8 @@ const Header = () => {
     return location.pathname === path;
   };
 
-  // Calculate total items in cart
-  const cartItemCount = cartItems.reduce((total, item) => total + (item.quantity || 1), 0);
+  // Calculate total items in cart (distinct items)
+  const cartItemCount = cartItems.length;
 
   // Calculate total price
   const totalPrice = cartItems.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
@@ -125,9 +120,7 @@ const Header = () => {
       try {
         if (authUser) {
           // Clear cart in database
-          await fetch(`/api/cart/${authUser._id}`, {
-            method: 'DELETE',
-          });
+          await axiosInstance.delete("/cart");
         } else {
           // Clear cart in localStorage
           localStorage.removeItem('cart');
@@ -189,7 +182,7 @@ const Header = () => {
                   {/* Logo Section */}
                   <div className="relative p-2">
                     <img 
-                      src="/src/Images/logo.png" 
+                      src={logo} 
                       alt="Logo" 
                       className="h-10 w-10 object-contain" 
                     />
@@ -242,16 +235,8 @@ const Header = () => {
               ))}
             </nav>
 
-            {/* Right Section: Search, Cart, Chat, Profile */}
+            {/* Right Section: Cart, Chat, Profile */}
             <div className="flex items-center space-x-1">
-              {/* Search Button */}
-              <button
-                onClick={() => setIsSearchOpen(!isSearchOpen)}
-                className="p-2 rounded-xl hover:bg-green-50/80 transition-all duration-300 group"
-              >
-                <FaSearch className="w-5 h-5 text-gray-600 group-hover:text-green-600 transition-colors" />
-              </button>
-
               {/* Cart Button */}
               {authUser?.role !== "admin" && (
                 <div className="flex items-center">
@@ -266,16 +251,6 @@ const Header = () => {
                       </span>
                     )}
                   </button>
-
-                  {cartItemCount > 0 && (
-                    <button
-                      onClick={handleCheckoutClick}
-                      className="ml-2 px-4 py-2 rounded-xl bg-gradient-to-r from-green-500 to-emerald-500 text-white shadow-lg shadow-green-500/20 hover:shadow-green-500/40 transition-all duration-300 group flex items-center space-x-2"
-                    >
-                      <FaReceipt className="w-4 h-4 transition-transform group-hover:rotate-12" />
-                      <span>Checkout</span>
-                    </button>
-                  )}
                 </div>
               )}
 
@@ -338,7 +313,7 @@ const Header = () => {
                 type="submit"
                 className="px-6 py-3 bg-gradient-to-r from-green-500 to-emerald-500 text-white rounded-r-xl hover:shadow-lg hover:shadow-green-500/20 transition-all duration-300 flex items-center"
               >
-                <FaSearch className="w-5 h-5" />
+                <FaShoppingCart className="w-5 h-5" />
               </button>
             </form>
           </div>
@@ -422,7 +397,7 @@ const Header = () => {
                       <div key={index} className="flex justify-between items-center border-b border-gray-100 pb-2">
                         <div className="flex items-center space-x-3">
                           <img 
-                            src={item.image || "/src/Images/placeholder.jpg"} 
+                            src={item.image || Basket} 
                             alt={item.name} 
                             className="w-12 h-12 object-cover rounded"
                           />

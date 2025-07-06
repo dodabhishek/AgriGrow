@@ -4,7 +4,9 @@ import ProductCard from "../Admin/Card/productCard";
 import { axiosInstance } from "../../lib/axios";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Loader, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
-import shopBackground from "../../Images/shopBackground.jpg";
+import shopBackground from "../../assets/Images/shopBackground.jpg";
+import Basket from "../../assets/Images/Basket.jpg";
+
 
 export default function Shop() {
   const [products, setProducts] = useState([]); // State to store products
@@ -419,7 +421,7 @@ export default function Shop() {
                 {/* Product Image */}
                 <div className="h-64 md:h-80 w-full overflow-hidden">
                   <img 
-                    src={selectedProduct.imageUrl || "/images/Basket.jpg"} 
+                    src={selectedProduct.imageUrl || Basket} 
                     alt={selectedProduct.name} 
                     className="w-full h-full object-cover"
                   />

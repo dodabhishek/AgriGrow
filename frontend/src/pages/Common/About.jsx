@@ -1,4 +1,12 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { CheckCircle, ArrowRight, Users, Award, TrendingUp, Leaf } from "lucide-react";
+import AboutImg from "../../assets/Images/About.jpg";
+import AboutF1 from "../../assets/Images/AboutF1.jpg";
+import OrganicProducts from "../../assets/Images/OrganicProducts.jpg";
+import farmer1 from "../../assets/Images/farmer1.jpg";
+import farmer2 from "../../assets/Images/farmer2.jpg";
+import farmer3 from "../../assets/Images/farmer3.jpg";
 import { FaPlayCircle, FaLeaf, FaUsers, FaGraduationCap, FaRobot, FaHandshake, FaTractor, FaSeedling, FaMobileAlt, FaCloudSunRain, FaTools, FaCheckCircle } from "react-icons/fa";
 
 export default function About() {
@@ -22,7 +30,7 @@ export default function About() {
               AgriGrow is more than just a platform—it's a movement towards sustainable, smart farming that connects farmers, consumers, and technology to create a better future for agriculture.
             </p>
           </div>
-          <img src="/src/Images/About.jpg" alt="Modern Agriculture" className="w-full rounded-2xl shadow-2xl" />
+          <img src={AboutImg} alt="Modern Agriculture" className="w-full rounded-2xl shadow-2xl" />
         </div>
       </section>
       
@@ -31,7 +39,7 @@ export default function About() {
         <div className="max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
           <div className="relative">
             <div className="absolute inset-0 bg-gradient-to-br from-green-100/50 via-emerald-100/50 to-teal-100/50 backdrop-blur-xl rounded-3xl -m-6"></div>
-            <img src="/src/Images/AboutF1.jpg" alt="Sustainable Farming" className="relative w-full h-96 object-cover rounded-2xl shadow-xl" />
+            <img src={AboutF1} alt="Sustainable Farming" className="relative w-full h-96 object-cover rounded-2xl shadow-xl" />
           </div>
           <div className="space-y-6">
             <div className="inline-block relative">
@@ -138,7 +146,7 @@ export default function About() {
       </section>
       
       {/* Technology Section */}
-      <section className="relative bg-cover bg-center py-48 text-center text-white" style={{ backgroundImage: "url('/src/Images/OrganicProducts.jpg')" }}>
+      <section className="relative bg-cover bg-center py-48 text-center text-white" style={{ backgroundImage: `url(${OrganicProducts})` }}>
         <div className="absolute inset-0 bg-gradient-to-br from-green-900/80 via-emerald-800/70 to-teal-800/60"></div>
         <div className="relative z-10 max-w-4xl mx-auto px-6">
           <FaPlayCircle className="mx-auto w-20 h-20 text-white cursor-pointer mb-6 hover:scale-110 transition-transform" />
@@ -218,19 +226,19 @@ export default function About() {
               { 
                 name: "Dr. Sarah Chen", 
                 role: "Agricultural Technology Lead",
-                image: "/src/Images/farmer1.jpg",
+                image: farmer1,
                 description: "Expert in AI applications for agriculture with 15+ years in sustainable farming technology."
               },
               { 
                 name: "Marcus Rodriguez", 
                 role: "Community Development",
-                image: "/src/Images/farmer2.jpg",
+                image: farmer2,
                 description: "Passionate about building strong farmer communities and promoting knowledge sharing."
               },
               { 
                 name: "Priya Patel", 
                 role: "Sustainability Specialist",
-                image: "/src/Images/farmer3.jpg",
+                image: farmer3,
                 description: "Dedicated to promoting organic farming practices and environmental conservation."
               }
             ].map((member, index) => (
