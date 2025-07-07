@@ -6,6 +6,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { Loader, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
 import shopBackground from "../../assets/Images/shopBackground.jpg";
 import Basket from "../../assets/Images/Basket.jpg";
+import dummyStoreData from '../../assets/dummyStoreData';
 
 
 export default function Shop() {
@@ -20,6 +21,7 @@ export default function Shop() {
   const [searchTerm, setSearchTerm] = useState(""); // Add search term state
   const [selectedProduct, setSelectedProduct] = useState(null); // Track selected product for popup
   const [isAddingToCart, setIsAddingToCart] = useState(false); // Track if product is being added to cart
+  const [selectedType, setSelectedType] = useState('all'); // New state for type filter
 
   const itemsPerPage = 9;
   const { authUser } = useAuthStore(); // Get the logged-in user
@@ -30,21 +32,31 @@ export default function Shop() {
       try {
         setLoading(true);
         const res = await axiosInstance.get("/products");
-        if (Array.isArray(res.data.products)) {
-          setProducts(res.data.products);
-          // Set initial price range based on products
-          const prices = res.data.products.map(p => p.price);
-          const min = Math.min(...prices);
-          const max = Math.max(...prices);
-          setMinPrice(min);
-          setMaxPrice(max);
-          setAppliedMinPrice(min);
-          setAppliedMaxPrice(max);
+        let fetchedProducts = Array.isArray(res.data.products) ? res.data.products : [];
+        // Always use dummyStoreData for demo purposes
+        if (fetchedProducts.length === 0) {
+          setProducts(dummyStoreData);
         } else {
-          console.error("Unexpected API response format");
+          setProducts(fetchedProducts);
         }
+        // Set initial price range based on products
+        const prices = (fetchedProducts.length === 0 ? dummyStoreData : fetchedProducts).map(p => p.price);
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        setMinPrice(min);
+        setMaxPrice(max);
+        setAppliedMinPrice(min);
+        setAppliedMaxPrice(max);
       } catch (error) {
-        console.error("Error fetching products:", error.message);
+        // On error, fallback to dummyStoreData
+        setProducts(dummyStoreData);
+        const prices = dummyStoreData.map(p => p.price);
+        const min = Math.min(...prices);
+        const max = Math.max(...prices);
+        setMinPrice(min);
+        setMaxPrice(max);
+        setAppliedMinPrice(min);
+        setAppliedMaxPrice(max);
       } finally {
         setLoading(false);
       }
@@ -52,7 +64,28 @@ export default function Shop() {
     fetchProducts();
   }, []);
 
-  // Filter products based on price range and search term
+  // When selectedType changes, update price range to fit that type's products
+  useEffect(() => {
+    const visibleProducts = selectedType === 'all'
+      ? products
+      : products.filter(product =>
+          (selectedType === 'consultation' && product.type === 'consultation') ||
+          (selectedType === 'chat' && product.type === 'chat') ||
+          (selectedType === 'field_visit' && product.type === 'field_visit') ||
+          (selectedType === 'tool' && (product.type === 'tool' || product.type === 'kit'))
+        );
+    if (visibleProducts.length > 0) {
+      const prices = visibleProducts.map(p => p.price);
+      const min = Math.min(...prices);
+      const max = Math.max(...prices);
+      setMinPrice(min);
+      setMaxPrice(max);
+      setAppliedMinPrice(min);
+      setAppliedMaxPrice(max);
+    }
+  }, [selectedType, products]);
+
+  // Filter products based on price range, search term, and type
   const filteredProducts = products
     .filter((product) => 
       product.price >= appliedMinPrice && 
@@ -62,7 +95,15 @@ export default function Shop() {
       searchTerm === "" || 
       product.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       (product.description && product.description.toLowerCase().includes(searchTerm.toLowerCase()))
+    )
+    .filter((product) =>
+      selectedType === 'all' ||
+      (selectedType === 'consultation' && product.type === 'consultation') ||
+      (selectedType === 'chat' && product.type === 'chat') ||
+      (selectedType === 'field_visit' && product.type === 'field_visit') ||
+      (selectedType === 'tool' && (product.type === 'tool' || product.type === 'kit'))
     );
+  console.log({ filteredProducts, selectedType, appliedMinPrice, appliedMaxPrice });
 
   // Paginate the filtered products
   const paginatedProducts = filteredProducts.slice((currentPage - 1) * itemsPerPage, currentPage * itemsPerPage);
@@ -213,6 +254,29 @@ export default function Shop() {
           </div>
         ) : (
           <>
+            {/* Type Toggle Filter */}
+            <div className="mb-6 flex flex-wrap justify-center gap-2">
+              {[
+                { label: 'All', value: 'all' },
+                { label: 'Video Consultations', value: 'consultation' },
+                { label: 'Chat Subscription', value: 'chat' },
+                { label: 'Field Visits by Experts', value: 'field_visit' },
+                { label: 'Tools & Equipment', value: 'tool' },
+              ].map(option => (
+                <button
+                  key={option.value}
+                  className={`px-4 py-2 rounded-full font-medium border transition-all duration-200
+                    ${selectedType === option.value
+                      ? 'bg-green-600 text-white border-green-600 shadow-lg'
+                      : 'bg-white text-green-700 border-green-200 hover:bg-green-50'}
+                  `}
+                  onClick={() => setSelectedType(option.value)}
+                >
+                  {option.label}
+                </button>
+              ))}
+            </div>
+
             {/* Search Bar with Glassmorphism */}
             <div className="mb-12">
               <div className="relative w-full md:w-2/3 mx-auto">
