@@ -4,7 +4,7 @@ import ProductCard from "../Admin/Card/productCard";
 import { axiosInstance } from "../../lib/axios";
 import { useAuthStore } from "../../store/useAuthStore";
 import { Loader, ChevronLeft, ChevronRight, ShoppingCart } from "lucide-react";
-import shopBackground from "../../assets/Images/shop.jpg";
+import shopBackground from "../../assets/Images/Shop.jpg";
 import Basket from "../../assets/Images/Basket.jpg";
 import videoConsultations from '../../assets/videoConsultations';
 import chatSubscriptions from '../../assets/chatSubscriptions';
