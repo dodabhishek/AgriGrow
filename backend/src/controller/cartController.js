@@ -52,15 +52,18 @@ export const updateCartProduct = async (req, res) => {
     const userId = req.user._id;
   
     try {
+      console.log('updateCartProduct called:', { userId, productId, quantity });
       const user = await User.findById(userId);
   
       if (!user) {
+        console.error('User not found:', userId);
         return res.status(404).json({ message: "User not found" });
       }
   
       const productInCart = user.cart.find((item) => item.productId.toString() === productId);
   
       if (!productInCart) {
+        console.error('Product not found in cart:', productId, user.cart);
         return res.status(404).json({ message: "Product not found in cart" });
       }
   
@@ -78,8 +81,8 @@ export const updateCartProduct = async (req, res) => {
   
       res.status(200).json({ message: "Cart updated successfully", cart: user.cart });
     } catch (error) {
-      console.error("Error updating cart product:", error.message);
-      res.status(500).json({ message: "Failed to update cart product" });
+      console.error("Error updating cart product:", error, { userId, productId, quantity });
+      res.status(500).json({ message: "Failed to update cart product", error: error.message });
     }
   };
 

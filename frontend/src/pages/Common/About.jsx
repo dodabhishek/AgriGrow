@@ -30,7 +30,9 @@ export default function About() {
               AgriGrow is more than just a platform—it's a movement towards sustainable, smart farming that connects farmers, consumers, and technology to create a better future for agriculture.
             </p>
           </div>
-          <img src={AboutImg} alt="Modern Agriculture" className="w-full rounded-2xl shadow-2xl" />
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+            <img src={AboutImg} alt="Modern Agriculture" className="w-full h-96 object-cover rounded-3xl" />
+          </div>
         </div>
       </section>
       
