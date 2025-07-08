@@ -1,8 +1,28 @@
+import expert1 from "../assets/Images/User/expert1.jpg";
+import expert2 from "../assets/Images/User/expert2.jpg";
+import expert3 from "../assets/Images/User/expert3.jpg";
+import expert4 from "../assets/Images/User/expert4.jpg";
+import expert5 from "../assets/Images/User/expert5.jpg";
+import expert6 from "../assets/Images/User/expert6.jpg";
+import expert7 from "../assets/Images/User/expert7.jpg";
+import expert8 from "../assets/Images/User/expert8.jpg";
+import expert9 from "../assets/Images/User/expert9.jpg";
+import expert10 from "../assets/Images/User/expert10.jpg";
+import expert11 from "../assets/Images/User/expert11.jpg";  
+import videoConsultations from "../assets/videoConsultations";
+import chatSubscriptions from "../assets/chatSubscriptions";
+import fieldVisits from "../assets/fieldVisits";
+import toolsAndEquipment from "../assets/toolsAndEquipment";
+import { smartSoilSensorImages } from "./equipmentImages";
+
+
+
+
 export const expertData = [
   {
     expertId: 100,
     name: "Dr. Anjali Mehta",
-    profileImage: "https://example.com/images/dr.-anjali-mehta.jpg",
+    profileImage: expert1,
     expertise: "Organic Farming",
     description: "Dr. Anjali Mehta is an expert in agricultural best practices with a focus on agrochemicals.",
     consultationTopics: ["Weed Control", "Seed Treatment", "Rainwater Harvesting"],
@@ -17,7 +37,7 @@ export const expertData = [
   {
     expertId: 101,
     name: "Mr. Ravi Sharma",
-    profileImage: "https://example.com/images/ravi-sharma.jpg",
+    profileImage: smartSoilSensorImages,
     expertise: "Soil Health Management",
     description: "Ravi Sharma has over 15 years of experience in soil testing and health improvement techniques.",
     consultationTopics: ["Soil Testing", "Composting", "pH Management"],
@@ -32,7 +52,7 @@ export const expertData = [
   {
     expertId: 102,
     name: "Dr. Kavita Iyer",
-    profileImage: "https://example.com/images/kavita-iyer.jpg",
+    profileImage: expert3,
     expertise: "Horticulture",
     description: "Dr. Kavita specializes in horticulture and greenhouse farming techniques.",
     consultationTopics: ["Greenhouse Setup", "Fruit Farming", "Pest Control"],
@@ -47,7 +67,7 @@ export const expertData = [
   {
     expertId: 103,
     name: "Mr. Suresh Reddy",
-    profileImage: "https://example.com/images/suresh-reddy.jpg",
+    profileImage: expert4,
     expertise: "Irrigation Systems",
     description: "Expert in drip and sprinkler irrigation systems, especially for dry regions.",
     consultationTopics: ["Drip Irrigation", "Water Conservation", "System Installation"],
@@ -62,7 +82,7 @@ export const expertData = [
   {
     expertId: 104,
     name: "Dr. Preeti Nair",
-    profileImage: "https://example.com/images/preeti-nair.jpg",
+    profileImage: expert5,
     expertise: "Crop Disease Management",
     description: "Specialist in identifying and treating crop diseases through sustainable methods.",
     consultationTopics: ["Fungal Diseases", "Viral Infections", "Organic Treatments"],
@@ -77,7 +97,7 @@ export const expertData = [
   {
     expertId: 105,
     name: "Mr. Manjeet Singh",
-    profileImage: "https://example.com/images/manjeet-singh.jpg",
+    profileImage: expert6,
     expertise: "Wheat & Rice Farming",
     description: "Veteran agronomist with deep knowledge in wheat and rice cultivation methods.",
     consultationTopics: ["Fertilizer Usage", "Crop Rotation", "Pest Control"],
@@ -92,7 +112,7 @@ export const expertData = [
   {
     expertId: 106,
     name: "Dr. Neha Verma",
-    profileImage: "https://example.com/images/neha-verma.jpg",
+    profileImage: expert7,
     expertise: "Agroforestry",
     description: "Researcher in sustainable agroforestry practices suitable for Indian climate zones.",
     consultationTopics: ["Tree Plantation", "Intercropping", "Climate Adaptation"],
@@ -107,7 +127,7 @@ export const expertData = [
   {
     expertId: 107,
     name: "Mr. Arvind Bansal",
-    profileImage: "https://example.com/images/arvind-bansal.jpg",
+    profileImage: expert8,
     expertise: "Market Linkage & Trading",
     description: "Arvind helps farmers understand agri-market trends and improve their profits.",
     consultationTopics: ["Market Rates", "Wholesale Selling", "Logistics"],
@@ -122,7 +142,7 @@ export const expertData = [
   {
     expertId: 108,
     name: "Dr. Sunita Kulkarni",
-    profileImage: "https://example.com/images/sunita-kulkarni.jpg",
+    profileImage: expert9,
     expertise: "Dairy & Livestock",
     description: "Expert in dairy management, cattle care, and productivity enhancement.",
     consultationTopics: ["Milking Automation", "Animal Health", "Fodder Planning"],
@@ -137,7 +157,7 @@ export const expertData = [
   {
     expertId: 109,
     name: "Mr. Iqbal Hussain",
-    profileImage: "https://example.com/images/iqbal-hussain.jpg",
+    profileImage: expert10,
     expertise: "Beekeeping",
     description: "Beekeeping trainer with experience in commercial honey production.",
     consultationTopics: ["Hive Setup", "Honey Harvesting", "Bee Health"],
@@ -152,7 +172,7 @@ export const expertData = [
   {
     expertId: 110,
     name: "Ms. Meera Thomas",
-    profileImage: "https://example.com/images/meera-thomas.jpg",
+    profileImage: expert11,
     expertise: "Spice Farming",
     description: "Specialist in cultivation of black pepper, cardamom, and clove.",
     consultationTopics: ["Drying Techniques", "Pest Resistance", "Export Guidelines"],
@@ -245,7 +265,7 @@ export const chatExperts = [
   {
     expertId: 300,
     name: "Ms. Aarti Desai",
-    profileImage: "https://example.com/images/aarti-desai.jpg",
+    profileImage: expert1,
     expertise: "Soil Nutrition",
     languages: ["Hindi", "English"],
     description: "Guidance on soil health, organic treatments, and pH management.",
@@ -258,7 +278,7 @@ export const chatExperts = [
   {
     expertId: 301,
     name: "Mr. Rajeev Thakur",
-    profileImage: "https://example.com/images/rajeev-thakur.jpg",
+    profileImage: expert2,
     expertise: "Pest Management",
     languages: ["Hindi", "Punjabi"],
     description: "Helps identify pests and recommend organic pest control solutions.",
@@ -271,7 +291,7 @@ export const chatExperts = [
   {
     expertId: 302,
     name: "Dr. Swati Ramesh",
-    profileImage: "https://example.com/images/swati-ramesh.jpg",
+    profileImage: expert3,
     expertise: "Crop Diseases",
     languages: ["English", "Marathi"],
     description: "Quick diagnosis and treatment plans for common crop diseases.",
@@ -284,7 +304,7 @@ export const chatExperts = [
   {
     expertId: 303,
     name: "Mr. Amit Solanki",
-    profileImage: "https://example.com/images/amit-solanki.jpg",
+    profileImage: expert4,
     expertise: "Market Prices",
     languages: ["Hindi", "Gujarati"],
     description: "Updates on local mandi prices and profit-maximizing sales strategy.",
@@ -297,7 +317,7 @@ export const chatExperts = [
   {
     expertId: 304,
     name: "Ms. Tanvi Sharma",
-    profileImage: "https://example.com/images/tanvi-sharma.jpg",
+    profileImage: expert5,
     expertise: "Seed Selection",
     languages: ["English", "Hindi"],
     description: "Recommends high-yield seeds for various climates and soils.",
@@ -310,7 +330,7 @@ export const chatExperts = [
   {
     expertId: 305,
     name: "Mr. Mohan Reddy",
-    profileImage: "https://example.com/images/mohan-reddy.jpg",
+    profileImage: expert6,
     expertise: "Irrigation Support",
     languages: ["Telugu", "English"],
     description: "Advice on drip, sprinkler systems, and water scheduling.",
@@ -323,7 +343,7 @@ export const chatExperts = [
   {
     expertId: 306,
     name: "Dr. Seema Bansal",
-    profileImage: "https://example.com/images/seema-bansal.jpg",
+    profileImage: expert7,
     expertise: "Fertilizer Guidance",
     languages: ["Hindi", "English"],
     description: "Balanced fertilizer use and crop-specific recommendations.",
@@ -336,7 +356,7 @@ export const chatExperts = [
   {
     expertId: 307,
     name: "Mr. Abdul Khan",
-    profileImage: "https://example.com/images/abdul-khan.jpg",
+    profileImage: expert8,
     expertise: "Weather Forecasting",
     languages: ["Hindi", "Urdu"],
     description: "Helps plan sowing and irrigation based on weather forecasts.",
@@ -349,7 +369,7 @@ export const chatExperts = [
   {
     expertId: 308,
     name: "Ms. Rina Ghosh",
-    profileImage: "https://example.com/images/rina-ghosh.jpg",
+    profileImage: expert9,
     expertise: "Vegetable Farming",
     languages: ["Bengali", "English"],
     description: "Expert in low-cost vegetable farming and disease prevention.",
@@ -362,7 +382,7 @@ export const chatExperts = [
   {
     expertId: 309,
     name: "Dr. Nitin Kulkarni",
-    profileImage: "https://example.com/images/nitin-kulkarni.jpg",
+    profileImage: expert10,
     expertise: "Farm Tools",
     languages: ["Marathi", "Hindi"],
     description: "Helps with tool selection, usage, and maintenance.",
@@ -375,7 +395,7 @@ export const chatExperts = [
   {
     expertId: 310,
     name: "Dr. Shalini Patel",
-    profileImage: "https://example.com/images/shalini-patel.jpg",
+    profileImage: expert11,
     expertise: "Greenhouse Farming",
     languages: ["Gujarati", "Hindi"],
     description: "Tips on polyhouse setup, temperature control, and ROI.",
@@ -648,287 +668,6 @@ export const fieldVisitExperts = [
   }
 ];
 
-export const toolsAndEquipment = [
-  {
-    toolId: 1,
-    name: "Smart Soil Sensor",
-    image: "https://example.com/images/smart-soil-sensor.jpg",
-    category: "Monitoring",
-    description: "Real-time soil moisture, pH, and temperature sensor with mobile connectivity.",
-    usage: "Helps optimize irrigation and fertilizer use based on live soil data.",
-    isAvailable: true,
-    rentalPricePerDay: 100,
-    buyPrice: 2499,
-    brand: "AgroSense",
-    techSpecs: ["Bluetooth 5.0", "Rechargeable Battery", "Waterproof"],
-    location: "Delhi, India"
-  },
-  {
-    toolId: 2,
-    name: "GPS-Enabled Seed Drill",
-    image: "https://example.com/images/seed-drill.jpg",
-    category: "Sowing",
-    description: "Precision seed drill for uniform seed distribution with GPS mapping.",
-    usage: "Ensures even crop emergence and reduces seed wastage.",
-    isAvailable: false,
-    rentalPricePerDay: 500,
-    buyPrice: 35999,
-    brand: "KrishiTech",
-    techSpecs: ["6 Rows", "Auto Depth Control", "Tractor-Mounted"],
-    location: "Ludhiana, Punjab"
-  },
-  {
-    toolId: 3,
-    name: "Battery Operated Knapsack Sprayer",
-    image: "https://example.com/images/knapsack-sprayer.jpg",
-    category: "Spraying",
-    description: "Portable and rechargeable sprayer for pesticides and fertilizers.",
-    usage: "Reduces manual effort and improves spraying uniformity.",
-    isAvailable: true,
-    rentalPricePerDay: 80,
-    buyPrice: 1899,
-    brand: "SprayPro",
-    techSpecs: ["16L Tank", "12V Battery", "Adjustable Nozzle"],
-    location: "Nashik, Maharashtra"
-  },
-  {
-    toolId: 4,
-    name: "Automated Weather Station",
-    image: "https://example.com/images/weather-station.jpg",
-    category: "Monitoring",
-    description: "IoT-based weather station for real-time data collection on field.",
-    usage: "Improves crop planning by monitoring rainfall, humidity, temperature.",
-    isAvailable: true,
-    rentalPricePerDay: 150,
-    buyPrice: 7999,
-    brand: "ClimaTrack",
-    techSpecs: ["Solar Powered", "WiFi Enabled", "Mobile App Access"],
-    location: "Nagpur, Maharashtra"
-  },
-  {
-    toolId: 5,
-    name: "Tractor-Mounted Rotavator",
-    image: "https://example.com/images/rotavator.jpg",
-    category: "Tillage",
-    description: "Efficient tillage machine for mixing soil and residue into fine seedbed.",
-    usage: "Reduces manual tillage time and fuel consumption.",
-    isAvailable: true,
-    rentalPricePerDay: 650,
-    buyPrice: 42000,
-    brand: "FieldKing",
-    techSpecs: ["6 Feet", "Heavy-Duty Blades", "50+ HP Tractor"],
-    location: "Jaipur, Rajasthan"
-  },
-  {
-    toolId: 6,
-    name: "Drones for Crop Monitoring",
-    image: "https://example.com/images/agri-drone.jpg",
-    category: "Surveillance",
-    description: "Multi-sensor drones for monitoring plant health and pest areas.",
-    usage: "Helps detect issues early and reduce yield loss.",
-    isAvailable: false,
-    rentalPricePerDay: 1200,
-    buyPrice: 95000,
-    brand: "AgriFly",
-    techSpecs: ["HD Camera", "NDVI Sensor", "15 min Flight Time"],
-    location: "Bangalore, Karnataka"
-  },
-  {
-    toolId: 7,
-    name: "Hydroponic Grow System",
-    image: "https://example.com/images/hydroponic-kit.jpg",
-    category: "Soilless Farming",
-    description: "Compact system for growing leafy greens using nutrient water.",
-    usage: "Ideal for small-space, urban, or controlled environment farming.",
-    isAvailable: true,
-    rentalPricePerDay: 300,
-    buyPrice: 12999,
-    brand: "GreenPod",
-    techSpecs: ["6 Plant Units", "pH + Nutrient Sensors", "Auto Pump"],
-    location: "Chennai, Tamil Nadu"
-  },
-  {
-    toolId: 8,
-    name: "Solar Water Pump Kit",
-    image: "https://example.com/images/solar-pump.jpg",
-    category: "Irrigation",
-    description: "Eco-friendly solar pump system for drawing water from borewells.",
-    usage: "Perfect for remote farms with no electricity access.",
-    isAvailable: true,
-    rentalPricePerDay: 350,
-    buyPrice: 18500,
-    brand: "SuryaAgro",
-    techSpecs: ["1 HP", "Panel + Controller Included", "DC Motor"],
-    location: "Ahmedabad, Gujarat"
-  },
-  {
-    toolId: 9,
-    name: "Mini Combine Harvester",
-    image: "https://example.com/images/mini-harvester.jpg",
-    category: "Harvesting",
-    description: "Compact harvesting machine for small and medium farms.",
-    usage: "Efficiently cuts, threshes, and cleans grains in one go.",
-    isAvailable: false,
-    rentalPricePerDay: 1000,
-    buyPrice: 185000,
-    brand: "BharatHarvest",
-    techSpecs: ["Diesel Engine", "Wheat & Paddy", "Self-Propelled"],
-    location: "Coimbatore, Tamil Nadu"
-  },
-  {
-    toolId: 10,
-    name: "AgriBot (AI Farm Assistant)",
-    image: "https://example.com/images/agribot.jpg",
-    category: "Automation",
-    description: "AI-driven robot for weeding, planting, and field inspection.",
-    usage: "Performs multiple tasks with minimal human intervention.",
-    isAvailable: true,
-    rentalPricePerDay: 950,
-    buyPrice: 125000,
-    brand: "FarmTechAI",
-    techSpecs: ["Obstacle Avoidance", "Solar Panel", "Multi-Tool Arm"],
-    location: "Hyderabad, Telangana"
-  }, {
-    toolId: 11,
-    name: "Digital pH Meter",
-    image: "https://example.com/images/digital-ph-meter.jpg",
-    category: "Soil Testing",
-    description: "Portable device for accurately measuring soil pH levels.",
-    usage: "Helps determine the soil acidity to guide fertilizer usage.",
-    isAvailable: true,
-    rentalPricePerDay: 60,
-    buyPrice: 799,
-    brand: "SoilPro",
-    techSpecs: ["Digital Display", "Battery Powered", "Range 3–9 pH"],
-    location: "Lucknow, Uttar Pradesh"
-  },
-  {
-    toolId: 12,
-    name: "Solar Dryer Unit",
-    image: "https://example.com/images/solar-dryer.jpg",
-    category: "Post-Harvest",
-    description: "Sun-powered unit to dry crops, herbs, or seeds hygienically.",
-    usage: "Improves shelf life and prevents fungus/mold.",
-    isAvailable: true,
-    rentalPricePerDay: 120,
-    buyPrice: 5999,
-    brand: "SunDryTech",
-    techSpecs: ["100 kg/day", "UV Protected Panels", "Aluminum Frame"],
-    location: "Indore, Madhya Pradesh"
-  },
-  {
-    toolId: 13,
-    name: "Multi-Crop Thresher",
-    image: "https://example.com/images/multicrop-thresher.jpg",
-    category: "Harvesting",
-    description: "Mechanized thresher for rice, wheat, pulses, and maize.",
-    usage: "Reduces post-harvest manual labor and grain loss.",
-    isAvailable: false,
-    rentalPricePerDay: 800,
-    buyPrice: 52000,
-    brand: "ThreshPro",
-    techSpecs: ["Diesel Operated", "Grain Collector Included", "800 kg/hr"],
-    location: "Raipur, Chhattisgarh"
-  },
-  {
-    toolId: 14,
-    name: "Handheld Crop Health Scanner",
-    image: "https://example.com/images/crop-health-scanner.jpg",
-    category: "Monitoring",
-    description: "Device that uses light sensors to detect crop stress or disease.",
-    usage: "Supports real-time health diagnosis on field.",
-    isAvailable: true,
-    rentalPricePerDay: 140,
-    buyPrice: 4299,
-    brand: "CropCare",
-    techSpecs: ["Bluetooth Sync", "AI Suggestions", "USB Rechargeable"],
-    location: "Bhopal, Madhya Pradesh"
-  },
-  {
-    toolId: 15,
-    name: "Solar Electric Fence",
-    image: "https://example.com/images/solar-fence.jpg",
-    category: "Farm Protection",
-    description: "Prevents wild animal entry using solar-powered electric fencing.",
-    usage: "Safe deterrent for farms near forests or open fields.",
-    isAvailable: true,
-    rentalPricePerDay: 200,
-    buyPrice: 7500,
-    brand: "SafeField",
-    techSpecs: ["12V System", "Covers 1 Acre", "Weatherproof"],
-    location: "Dehradun, Uttarakhand"
-  },
-  {
-    toolId: 16,
-    name: "Tractor-Mounted Boom Sprayer",
-    image: "https://example.com/images/boom-sprayer.jpg",
-    category: "Spraying",
-    description: "Wide coverage pesticide sprayer with minimal manual effort.",
-    usage: "Covers large areas efficiently with adjustable boom length.",
-    isAvailable: false,
-    rentalPricePerDay: 700,
-    buyPrice: 42000,
-    brand: "AgroJet",
-    techSpecs: ["16 Nozzles", "200L Tank", "Foldable Arms"],
-    location: "Pune, Maharashtra"
-  },
-  {
-    toolId: 17,
-    name: "AI Irrigation Controller",
-    image: "https://example.com/images/ai-irrigation.jpg",
-    category: "Irrigation",
-    description: "Automated irrigation system that adjusts water flow using AI data.",
-    usage: "Saves water and improves yield by precise moisture-based control.",
-    isAvailable: true,
-    rentalPricePerDay: 180,
-    buyPrice: 6999,
-    brand: "SmartAgro",
-    techSpecs: ["WiFi Enabled", "Weather API", "Mobile App Controlled"],
-    location: "Hyderabad, Telangana"
-  },
-  {
-    toolId: 18,
-    name: "Seedling Tray with Mist Chamber",
-    image: "https://example.com/images/mist-tray.jpg",
-    category: "Nursery",
-    description: "Humidity-controlled tray system for raising healthy seedlings.",
-    usage: "Boosts germination rate and protects young plants.",
-    isAvailable: true,
-    rentalPricePerDay: 70,
-    buyPrice: 1299,
-    brand: "AgriMist",
-    techSpecs: ["20 Cell Tray", "Poly Cover", "Humidity Valve"],
-    location: "Visakhapatnam, Andhra Pradesh"
-  },
-  {
-    toolId: 19,
-    name: "Remote-Controlled Weeder",
-    image: "https://example.com/images/rc-weeder.jpg",
-    category: "Weeding",
-    description: "Robotic machine to remove weeds without damaging crops.",
-    usage: "Reduces manual weeding labor and improves crop access.",
-    isAvailable: false,
-    rentalPricePerDay: 950,
-    buyPrice: 38000,
-    brand: "AutoWeed",
-    techSpecs: ["Tracks Based", "Remote Range 100m", "Solar Panel"],
-    location: "Udaipur, Rajasthan"
-  },
-  {
-    toolId: 20,
-    name: "Cold Storage Box (Mobile)",
-    image: "https://example.com/images/cold-box.jpg",
-    category: "Post-Harvest",
-    description: "Mobile cold storage for transporting fresh fruits and vegetables.",
-    usage: "Prevents spoilage during market transit.",
-    isAvailable: true,
-    rentalPricePerDay: 300,
-    buyPrice: 15999,
-    brand: "CoolFarm",
-    techSpecs: ["12V Battery", "70L Capacity", "Temperature Control"],
-    location: "Kolkata, West Bengal"
-  }
-];
 
 const getProductsByType = (type) => {
   if (type === 'consultation') return videoConsultations;
@@ -944,7 +683,7 @@ const getProductsByType = (type) => {
   ];
 };
 
-const [products, setProducts] = useState(getProductsByType('all'));
+const products = getProductsByType('all');
 
 
  

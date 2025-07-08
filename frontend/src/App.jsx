@@ -15,6 +15,7 @@ import Shop from "./pages/Shop/Shop.jsx";
 import Product from "./pages/Admin/ProductPage.jsx";
 import Cart from "./pages/Shop/CartPage.jsx";
 import ChatPage from "./pages/Chat/ChatPage.jsx";
+import EquipmentDetail from "./pages/Shop/EquipmentDetail.jsx";
 import { useAuthStore } from "./store/useAuthStore.js";
 import { useThemeStore } from "./store/useThemeStore.js";
 import { Toaster } from "react-hot-toast";
@@ -43,6 +44,7 @@ const App = () => {
         <Route path="/projects" element={<Projects />} />
         <Route path="/blog" element={<Blog />} />
         <Route path="/shop" element={<Shop />} />
+        <Route path="/shop/equipment/:id" element={<EquipmentDetail />} />
         <Route path="/contact" element={<Contact />} />
 
         {/* Auth Routes */}
