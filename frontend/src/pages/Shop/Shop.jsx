@@ -1,12 +1,37 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { expertData, chatExperts, fieldVisitExperts } from '../../assets/dummyStoreData';
-import toolsAndEquipment from '../../assets/toolsAndEquipment';
+import { productsService } from '../../lib/productsService';
 import ExpertCard from '../../components/ExpertCard';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useLocation } from 'react-router-dom';
+
+const ITEMS_PER_PAGE = 12;
 
 export default function Shop() {
-  const [selectedType, setSelectedType] = useState('all');
+  const location = useLocation();
   const navigate = useNavigate();
+  const [toolsAndEquipment, setToolsAndEquipment] = useState([]);
+  const [loading, setLoading] = useState(true);
+  // Set selectedType from navigation state if available
+  const [selectedType, setSelectedType] = useState(location.state?.selectedType || 'all');
+  const [currentPage, setCurrentPage] = useState(1);
+
+  // Fetch products from backend on component mount
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        setLoading(true);
+        const products = await productsService.getAllProducts();
+        setToolsAndEquipment(products);
+      } catch (error) {
+        console.error('Error fetching products:', error);
+        setToolsAndEquipment([]);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   let mainGridData = [];
   if (selectedType === 'experts') mainGridData = expertData;
@@ -20,8 +45,28 @@ export default function Shop() {
     ...toolsAndEquipment
   ];
 
+  // Pagination logic
+  const totalPages = Math.ceil(mainGridData.length / ITEMS_PER_PAGE);
+  const paginatedData = mainGridData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+
   // Helper to check if item is a tool/equipment
   const isEquipment = (item) => toolsAndEquipment.includes(item);
+
+  // Reset to page 1 when selectedType changes
+  useEffect(() => {
+    setCurrentPage(1);
+  }, [selectedType]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-20 flex items-center justify-center">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-green-600 mx-auto mb-4"></div>
+          <p className="text-gray-600">Loading products...</p>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-20">
@@ -59,43 +104,82 @@ export default function Shop() {
 
       {/* Main Grid for Selected Data */}
       <div className="container mx-auto px-4 pb-8">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8">
-          {mainGridData.length > 0 ? (
-            mainGridData.map((item, idx) => {
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 items-stretch">
+          {paginatedData.length > 0 ? (
+            paginatedData.map((item, idx) => {
+              const animationDelay = `${idx * 60}ms`;
               // If this is a toolsAndEquipment card, make it clickable
               if (isEquipment(item)) {
                 return (
                   <div
                     key={item._id}
-                    className="cursor-pointer"
-                    onClick={() => navigate(`/shop/equipment/${item._id}`)}
+                    className="cursor-pointer h-full transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 animate-fadeIn"
+                    style={{ animationDelay }}
+                    onClick={() => navigate(`/shop/equipment/${item._id}`, { state: { product: item, fromSection: selectedType } })}
                   >
                     <ExpertCard
                       image={item.profileImage || item.imageUrl}
                       name={item.name}
-                      expertise={item.expertise || item.type}
+                      expertise={item.expertise || item.type || 'Product'}
                       description={item.description}
-                      rating={item.rating}
+                      rating={item.rating || 4.0}
                     />
                   </div>
                 );
               }
               // Otherwise, render as usual
               return (
-                <ExpertCard
+                <div
                   key={item.expertId || item._id || idx}
-                  image={item.profileImage || item.imageUrl}
-                  name={item.name}
-                  expertise={item.expertise || item.type}
-                  description={item.description}
-                  rating={item.rating}
-                />
+                  className="transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 animate-fadeIn h-full"
+                  style={{ animationDelay }}
+                >
+                  <ExpertCard
+                    image={item.profileImage || item.imageUrl}
+                    name={item.name}
+                    expertise={item.expertise || item.type}
+                    description={item.description}
+                    rating={item.rating}
+                  />
+                </div>
               );
             })
           ) : (
             <div className="col-span-full text-center text-gray-500">No data found for this category.</div>
           )}
         </div>
+        {/* Pagination Controls */}
+        {totalPages > 1 && (
+          <div className="flex justify-center mt-8 gap-2">
+            <button
+              className="rounded-xl px-4 py-2 mx-1 text-lg font-semibold bg-gray-200 text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+            >
+              Prev
+            </button>
+            {Array.from({ length: totalPages }, (_, i) => (
+              <button
+                key={i + 1}
+                className={`rounded-xl px-4 py-2 mx-1 text-lg font-semibold transition-all duration-150 ${
+                  currentPage === i + 1
+                    ? 'bg-green-600 text-white shadow font-bold scale-105'
+                    : 'bg-white text-gray-700 hover:bg-green-100'
+                }`}
+                onClick={() => setCurrentPage(i + 1)}
+              >
+                {i + 1}
+              </button>
+            ))}
+            <button
+              className="rounded-xl px-4 py-2 mx-1 text-lg font-semibold bg-gray-200 text-gray-700 transition disabled:opacity-50 disabled:cursor-not-allowed"
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages}
+            >
+              Next
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );

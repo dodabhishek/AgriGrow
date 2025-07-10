@@ -6,6 +6,7 @@ import { useAuthStore } from "../../store/useAuthStore";
 import { Loader, ChevronLeft, ChevronRight, Plus, Package, Search, X } from "lucide-react";
 import { FaSearch, FaTimes } from "react-icons/fa";
 import shopBackground from "../../assets/Images/shopBackground.jpg";
+import { useLocation, useNavigate } from "react-router-dom";
 
 const ProductPage = () => {
   const [products, setProducts] = useState([]);
@@ -23,6 +24,11 @@ const ProductPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 9;
   const { authUser } = useAuthStore();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const fromSection = location.state?.fromSection || "all";
+  const handleBack = () => navigate(`/shop`, { state: { selectedType: fromSection } });
+  const [selectedType, setSelectedType] = useState(location.state?.selectedType || "all");
 
   useEffect(() => {
     const fetchProducts = async () => {
@@ -291,6 +297,7 @@ const ProductPage = () => {
                         ));
                       }}
                       onProductDelete={handleDeleteProduct}
+                      onClick={() => navigate(`/shop/product/${product._id}`, { state: { product: product, fromSection: selectedType } })}
                     />
                   ))}
               </div>

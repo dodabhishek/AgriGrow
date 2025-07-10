@@ -3,7 +3,7 @@ import { addToCart, getCart, updateCartProduct, clearCart } from "../controller/
 import { protectRoute } from "../middleware/auth.middleware.js";
 
 const router = express.Router();
-
+console.log("cartRoute called");
 router.post("/", protectRoute, addToCart);
 router.get("/", protectRoute, getCart);
 router.put("/update", protectRoute, updateCartProduct);

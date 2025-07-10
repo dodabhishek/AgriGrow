@@ -16,7 +16,11 @@ const productSchema = new mongoose.Schema({
   },
   imageUrl: {
     type: String,
-    
+  },
+  type: {
+    type: String,
+    enum: ['sensor', 'monitoring', 'kit', 'irrigation', 'drone', 'controller', 'tool'],
+    default: 'tool'
   },
   user:{
     type: mongoose.Schema.Types.ObjectId,

@@ -44,12 +44,26 @@ export const getProducts = async (req, res) => {
   }
 };
 
+export const getProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await Product.findById(id);
+    if (!product) {
+      return res.status(404).json({ message: "Product not found" });
+    }
+    return res.status(200).json({ success: true, product });
+  } catch (error) {
+    console.error("Error fetching product by id:", error);
+    res.status(500).json({ message: "Internal server error", error: error.message });
+  }
+};
+
 export const createProduct = async (req, res) => {
   console.log("Create product route hit");
   console.log("Request body:", req.body);
 
   try {
-    const { name, description, price, user, image } = req.body;
+    const { name, description, price, user, image, type } = req.body;
 
     // Check if all required fields are provided
     if (!name || !description || !price || !user) {
@@ -74,6 +88,7 @@ export const createProduct = async (req, res) => {
       price,
       imageUrl, // Only set imageUrl if the image was uploaded
       user,
+      type: type || 'tool',
     });
 
     res.status(201).json({ success: true, product });
@@ -85,7 +100,7 @@ export const createProduct = async (req, res) => {
 
 export const updateProduct = async (req, res) => {
   console.log("Update product route hit");
-  const { name, description, price, imageUrl } = req.body;
+  const { name, description, price, imageUrl, type } = req.body;
   const { id } = req.params;
 
   try {
@@ -106,6 +121,7 @@ export const updateProduct = async (req, res) => {
     product.description = description || product.description;
     product.price = price || product.price;
     product.imageUrl = imageUrl || product.imageUrl;
+    product.type = type || product.type;
 
     // Save the updated product
     await product.save();
