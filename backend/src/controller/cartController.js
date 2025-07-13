@@ -1,4 +1,3 @@
-import { toast } from "react-toastify";
 import User from "../models/user.model.js";
 
 // Add product to cart
@@ -17,10 +16,9 @@ export const addToCart = async (req, res) => {
     const existingProduct = user.cart.find((item) => item.productId.toString() === productId);
 
     if (existingProduct) {
-      toast.success("Product Allready in cart");
+      return res.status(400).json({ message: "Product already in cart" });
     } else {
       user.cart.push({ productId, quantity: 1 });
-      toast.success("Product added to cart");
     }
 
     await user.save();

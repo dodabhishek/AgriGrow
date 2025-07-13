@@ -5,7 +5,7 @@ services:
     env: node
     plan: free
     buildCommand: cd backend && npm install
-    startCommand: cd backend && node index.js
+    startCommand: cd backend && node src/index.js
     envVars:
       - key: NODE_ENV
         value: production
@@ -13,6 +13,18 @@ services:
         value: <YOUR_MONGO_URI>     # set this securely later in dashboard or here
       - key: JWT_SECRET
         value: <YOUR_SECRET>
+      - key: CLOUDINARY_CLOUD_NAME_Users
+        value: <YOUR_CLOUDINARY_CLOUD_NAME>
+      - key: CLOUDINARY_API_KEY_Users
+        value: <YOUR_CLOUDINARY_API_KEY>
+      - key: CLOUDINARY_API_SECRET_Users
+        value: <YOUR_CLOUDINARY_API_SECRET>
+      - key: CLOUDINARY_CLOUD_NAME_Products
+        value: <YOUR_CLOUDINARY_CLOUD_NAME>
+      - key: CLOUDINARY_API_KEY_Products
+        value: <YOUR_CLOUDINARY_API_KEY>
+      - key: CLOUDINARY_API_SECRET_Products
+        value: <YOUR_CLOUDINARY_API_SECRET>
 
   - type: static
     name: agrigrow-frontend
