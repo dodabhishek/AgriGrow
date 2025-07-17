@@ -3,14 +3,16 @@ import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, Star, Users, Award, TrendingUp } from "lucide-react";
 import { FaTractor, FaLeaf, FaSeedling, FaUsers, FaCheckCircle, FaStar, FaAward } from "react-icons/fa";
 import ServiceImg from "../../assets/Images/Service.jpg";
-import service1 from "../../assets/Images/service1.jpg";
-import service2 from "../../assets/Images/service2.jpg";
-import service3 from "../../assets/Images/service3.jpg";
-import service4 from "../../assets/Images/service4.jpg";
+
 import category1 from "../../assets/Images/category1.jpg";
 import category2 from "../../assets/Images/category2.jpg";
 import category3 from "../../assets/Images/category3.jpg";
 import healthyFood from "../../assets/Images/healthy-food.jpg";
+import { FaVideo, FaComments, FaHandshake, FaTools } from "react-icons/fa";
+import farmer1 from '../../assets/Images/farmer1.jpg';
+import farmer2 from '../../assets/Images/farmer2.jpg';
+import fieldVisitsImg from '../../assets/Images/basket.jpg';
+import shopImg from '../../assets/Images/Shop.jpg';
 
 const Service = () => {
   const [isVideoPlaying, setIsVideoPlaying] = useState(false);
@@ -62,29 +64,29 @@ const Service = () => {
           
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
             {[
-              { 
-                title: 'Agriculture Products', 
-                image: service1,
-                description: 'High-quality farming products and equipment for modern agriculture.',
-                icon: FaTractor
+              {
+                title: 'Video Consultations',
+                image: farmer1,
+                description: 'Book a 1-on-1 video call with agricultural experts for personalized advice and analysis.',
+                icon: FaVideo
               },
-              { 
-                title: 'Organic Products', 
-                image: service2,
-                description: 'Certified organic farming solutions and sustainable practices.',
-                icon: FaLeaf
+              {
+                title: 'Chat Support',
+                image: farmer2,
+                description: 'Get instant advice from experts via chat. Share images, documents, and get quick solutions.',
+                icon: FaComments
               },
-              { 
-                title: 'Fresh Vegetables', 
-                image: service3,
-                description: 'Direct-from-farm fresh vegetables and produce delivery.',
-                icon: FaSeedling
+              {
+                title: 'Field Visits',
+                image: fieldVisitsImg,
+                description: 'Schedule on-site visits from experts for hands-on assessment and customized solutions.',
+                icon: FaHandshake
               },
-              { 
-                title: 'Dairy Products', 
-                image: service4,
-                description: 'Premium dairy products from sustainable farming practices.',
-                icon: FaUsers
+              {
+                title: 'Tools & Equipment',
+                image: shopImg,
+                description: 'Access modern tools and equipment for smart, efficient, and sustainable farming.',
+                icon: FaTools
               }
             ].map((service, index) => (
               <div 

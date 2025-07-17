@@ -10,9 +10,10 @@ const MessageInput = () => {
   const handleSend = (e) => {
     e.preventDefault();
     if (!message.trim()) return;
-    sendMessage(message);
+    sendMessage({ text: message });
     setMessage("");
     inputRef.current?.focus();
+   
   };
 
   if (!selectedUser) return null;

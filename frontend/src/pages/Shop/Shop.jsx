@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { expertData, chatExperts, fieldVisitExperts } from '../../assets/dummyStoreData';
 import { productsService } from '../../lib/productsService';
 import ExpertCard from '../../components/ExpertCard';
@@ -47,7 +47,7 @@ export default function Shop() {
 
   // Pagination logic
   const totalPages = Math.ceil(mainGridData.length / ITEMS_PER_PAGE);
-  const paginatedData = mainGridData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE);
+  const paginatedData = useMemo(() => mainGridData.slice((currentPage - 1) * ITEMS_PER_PAGE, currentPage * ITEMS_PER_PAGE), [mainGridData, currentPage]);
 
   // Helper to check if item is a tool/equipment
   const isEquipment = (item) => toolsAndEquipment.includes(item);
@@ -57,7 +57,7 @@ export default function Shop() {
     setCurrentPage(1);
   }, [selectedType]);
 
-  if (loading) {
+  if (selectedType === 'tools' && loading) {
     return (
       <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-20 flex items-center justify-center">
         <div className="text-center">
@@ -107,14 +107,12 @@ export default function Shop() {
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 items-stretch">
           {paginatedData.length > 0 ? (
             paginatedData.map((item, idx) => {
-              const animationDelay = `${idx * 60}ms`;
               // If this is a toolsAndEquipment card, make it clickable
               if (isEquipment(item)) {
                 return (
                   <div
                     key={item._id}
-                    className="cursor-pointer h-full transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 animate-fadeIn"
-                    style={{ animationDelay }}
+                    className="cursor-pointer h-full transition-all duration-300 ease-in-out transform hover:scale-105"
                     onClick={() => navigate(`/shop/equipment/${item._id}`, { state: { product: item, fromSection: selectedType } })}
                   >
                     <ExpertCard
@@ -131,8 +129,7 @@ export default function Shop() {
               return (
                 <div
                   key={item.expertId || item._id || idx}
-                  className="transition-all duration-300 ease-in-out transform hover:scale-105 opacity-0 animate-fadeIn h-full"
-                  style={{ animationDelay }}
+                  className="transition-all duration-300 ease-in-out transform hover:scale-105 h-full"
                 >
                   <ExpertCard
                     image={item.profileImage || item.imageUrl}
