@@ -4,10 +4,12 @@ import axiosInstance from "../services/axiosInstance";
 import CartItem from "../components/CartItem";
 
 const Cart = () => {
+  console.log("Cart page rendered");
   const [cartItems, setCartItems] = useState([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    console.log("Cart page mounted");
     const fetchCart = async () => {
       try {
         setLoading(true);

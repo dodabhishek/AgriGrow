@@ -35,12 +35,12 @@ export const getCart = async (req, res) => {
   const userId = req.user._id;
 
   try {
+    console.log("getCart called");
     const user = await User.findById(userId).populate("cart.productId");
-
+    console.log(user.cart);
     if (!user) {
       return res.status(404).json({ message: "User not found" });
     }
-
     res.status(200).json({ cart: user.cart });
   } catch (error) {
     console.error("Error fetching cart:", error.message);
@@ -51,7 +51,8 @@ export const getCart = async (req, res) => {
 export const updateCartProduct = async (req, res) => {
     const { productId, quantity } = req.body;
     const userId = req.user._id;
-  
+  console.log("updateCartProduct called");
+  console.log(productId, quantity);
     try {
       console.log('updateCartProduct called:', { userId, productId, quantity });
       const user = await User.findById(userId);
@@ -61,18 +62,20 @@ export const updateCartProduct = async (req, res) => {
         return res.status(404).json({ message: "User not found" });
       }
   
-      const productInCart = user.cart.find((item) => item.productId.toString() === productId);
+      const productInCart = user.cart.find((item) => item.productId && item.productId.toString() === productId.toString());
   
       if (!productInCart) {
-        console.error('Product not found in cart:', productId, user.cart);
-        return res.status(404).json({ message: "Product not found in cart" });
+        // If product is not in cart, return 200 with current cart
+        return res.status(200).json({ message: "Product already removed from cart", cart: user.cart });
       }
   
       // Update the quantity if provided
       if (quantity !== undefined) {
         if (quantity <= 0) {
           // Remove the product if quantity is 0 or less
-          user.cart = user.cart.filter((item) => item.productId.toString() !== productId);
+          user.cart = user.cart.filter(
+            (item) => item.productId && item.productId.toString() !== productId.toString()
+          );
         } else {
           productInCart.quantity = quantity;
         }

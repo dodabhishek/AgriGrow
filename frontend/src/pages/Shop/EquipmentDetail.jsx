@@ -55,9 +55,13 @@ const EquipmentDetail = () => {
     setAddToCartLoading(true);
     try {
       await productsService.addToCart(equipment._id);
-      // Removed alert('Added to cart!')
+      // Optionally show a success message here
     } catch (error) {
-      alert('Failed to add to cart. Please login or try again.');
+      if (error.message === 'You must be logged in to add items to your cart.') {
+        alert('Please log in to add items to your cart.');
+      } else {
+        alert('Failed to add to cart. Please try again.');
+      }
     } finally {
       setAddToCartLoading(false);
     }

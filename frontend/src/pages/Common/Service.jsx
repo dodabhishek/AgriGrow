@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React from "react";
 import { Link } from "react-router-dom";
 import { ArrowRight, CheckCircle, Star, Users, Award, TrendingUp } from "lucide-react";
 import { FaTractor, FaLeaf, FaSeedling, FaUsers, FaCheckCircle, FaStar, FaAward } from "react-icons/fa";
@@ -7,19 +7,17 @@ import ServiceImg from "../../assets/Images/Service.jpg";
 import category1 from "../../assets/Images/category1.jpg";
 import category2 from "../../assets/Images/category2.jpg";
 import category3 from "../../assets/Images/category3.jpg";
-import healthyFood from "../../assets/Images/healthy-food.jpg";
+import healthyFood from "../../assets/Images/healty_veges.png";
 import { FaVideo, FaComments, FaHandshake, FaTools } from "react-icons/fa";
 import farmer1 from '../../assets/Images/farmer1.jpg';
-import farmer2 from '../../assets/Images/farmer2.jpg';
-import fieldVisitsImg from '../../assets/Images/basket.jpg';
-import shopImg from '../../assets/Images/Shop.jpg';
+import farmer2 from '../../assets/Images/chat_support.png';
+import fieldVisitsImg from '../../assets/Images/fieldVisit.jpg';
+import shopImg from '../../assets/Images/Shop.png';
+import agriTechInnovation from '../../assets/Images/project_idea.png'; 
 
 const Service = () => {
-  const [isVideoPlaying, setIsVideoPlaying] = useState(false);
-
   return (
     <div className="bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
-      {/* Hero Section */}
       <section className="relative py-24 px-6 bg-white overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-100/30 via-emerald-100/30 to-teal-100/30"></div>
         <div className="max-w-6xl mx-auto relative z-10">
@@ -44,7 +42,6 @@ const Service = () => {
         </div>
       </section>
 
-      {/* Core Services Section */}
       <section className="py-24 px-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -125,7 +122,6 @@ const Service = () => {
         </div>
       </section>
 
-      {/* Technology & Innovation Section */}
       <section className="py-24 px-6 bg-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-100/20 via-emerald-100/20 to-teal-100/20"></div>
         <div className="max-w-6xl mx-auto relative z-10">
@@ -137,37 +133,24 @@ const Service = () => {
               </p>
             </div>
             <h2 className="text-4xl font-bold text-gray-800 mb-6">
-              See Our Work in Action
+              The Future of Farming is Here
             </h2>
             <p className="text-xl text-gray-600 max-w-3xl mx-auto">
-              Watch how our agricultural services and technology are transforming farming practices for the better.
+              Explore the innovative tools and technologies revolutionizing agriculture, from autonomous tractors to AI-driven crop monitoring and drone imaging.
             </p>
           </div>
           
-          <div className="relative rounded-3xl overflow-hidden shadow-2xl aspect-video">
-            {!isVideoPlaying ? (
-              <div className="absolute inset-0 bg-gradient-to-br from-green-900/80 via-emerald-800/70 to-teal-800/60 flex items-center justify-center">
-                <button
-                  onClick={() => setIsVideoPlaying(true)}
-                  className="group relative overflow-hidden"
-                >
-                  <div className="absolute inset-0 bg-white/20 backdrop-blur-sm rounded-full -m-2"></div>
-                  <div className="relative bg-white/90 backdrop-blur-sm p-8 rounded-full shadow-2xl hover:shadow-3xl transition-all duration-300 transform hover:scale-110 group-hover:bg-white">
-                    <ArrowRight className="w-12 h-12 text-green-600 transform group-hover:scale-110 transition-transform" />
-                  </div>
-                </button>
-              </div>
-            ) : (
-              <video className="w-full h-full object-cover" controls autoPlay>
-                <source src="/path-to-video.mp4" type="video/mp4" />
-                Your browser does not support the video tag.
-              </video>
-            )}
+          <div className="relative rounded-3xl overflow-hidden shadow-2xl">
+            <img 
+              src={agriTechInnovation} 
+              alt="Technological innovation in agriculture" 
+              className="w-full h-auto object-cover" 
+            />
+             <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
           </div>
         </div>
       </section>
 
-      {/* Quality Standards Section */}
       <section className="py-24 px-6 bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50">
         <div className="max-w-6xl mx-auto">
           <div className="text-center mb-16">
@@ -241,7 +224,6 @@ const Service = () => {
         </div>
       </section>
 
-      {/* Healthy Food Section */}
       <section className="py-24 px-6 bg-white relative overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-br from-green-100/20 via-emerald-100/20 to-teal-100/20"></div>
         <div className="max-w-6xl mx-auto relative z-10">
@@ -296,7 +278,6 @@ const Service = () => {
         </div>
       </section>
 
-      {/* Call to Action Section */}
       <section className="py-24 px-6 bg-gradient-to-br from-green-600 via-emerald-600 to-teal-600">
         <div className="max-w-4xl mx-auto text-center text-white">
           <h2 className="text-4xl font-bold mb-6">
@@ -320,4 +301,3 @@ const Service = () => {
 };
 
 export default Service;
-

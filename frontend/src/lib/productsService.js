@@ -36,6 +36,9 @@ export const productsService = {
       const response = await axiosInstance.post('/cart', { productId });
       return response.data;
     } catch (error) {
+      if (error.response && (error.response.status === 401 || error.response.status === 403)) {
+        throw new Error('You must be logged in to add items to your cart.');
+      }
       console.error('Error adding to cart:', error);
       throw error;
     }
