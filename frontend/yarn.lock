@@ -1039,9 +1039,9 @@ camelize@^1.0.0:
   integrity sha512-dU+Tx2fsypxTgtLoE36npi3UqcjSSMNYfkqgmoEhtZrraP5VWq0K7FkWVTYa8eMPtnU/G2txVsfdCJTn9uzpuQ==
 
 caniuse-lite@^1.0.30001688, caniuse-lite@^1.0.30001702:
-  version "1.0.30001706"
-  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001706.tgz"
-  integrity sha512-3ZczoTApMAZwPKYWmwVbQMFpXBDds3/0VciVoUwPUbldlYyVLmRVuRs/PcUZtHpbLRpzzDvrvnFuREsGt6lUug==
+  version "1.0.30001752"
+  resolved "https://registry.npmjs.org/caniuse-lite/-/caniuse-lite-1.0.30001752.tgz"
+  integrity sha512-vKUk7beoukxE47P5gcVNKkDRzXdVofotshHwfR9vmpeFKxmI5PBpgOMC18LUJUA/DvJ70Y7RveasIBraqsyO/g==
 
 chalk@^4.0.0:
   version "4.1.2"

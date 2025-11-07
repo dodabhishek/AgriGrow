@@ -4,8 +4,7 @@ import bcrypt from "bcryptjs";
 import cloudinary from "../lib/cloudinary.js";
 
 export const signup = async (req, res) => {
-  console.log(bcrypt)
-  const { fullName, email, password, role } = req.body; // Added role
+  const { fullName, email, password, role } = req.body;
   try {
     if (!fullName || !email || !password ) {
       return res.status(400).json({ message: "All fields are required" });
@@ -15,18 +14,27 @@ export const signup = async (req, res) => {
       return res.status(400).json({ message: "Password must be at least 6 characters" });
     }
 
-    const user = await User.findOne({ email });
+    // Normalize email to lowercase
+    const normalizedEmail = email.toLowerCase().trim();
+    
+    console.log("Signup attempt for email:", normalizedEmail);
 
-    if (user) return res.status(400).json({ message: "Email already exists" });
+    // Check if user exists (case-insensitive)
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${normalizedEmail}$`, 'i') } });
+
+    if (user) {
+      console.log("Email already exists:", normalizedEmail);
+      return res.status(400).json({ message: "Email already exists" });
+    }
 
     const salt = await bcrypt.genSalt(10);
     const hashedPassword = await bcrypt.hash(password, salt);
 
     const newUser = new User({
       fullName,
-      email,
+      email: normalizedEmail, // Store normalized email
       password: hashedPassword,
-      role, // Save role in the database
+      role: role || "user", // Default to "user" if not provided
     });
 
     if (newUser) {
@@ -34,58 +42,94 @@ export const signup = async (req, res) => {
       generateToken(newUser._id, res);
       await newUser.save();
 
+      console.log("User created successfully:", normalizedEmail);
+
       res.status(201).json({
         _id: newUser._id,
         fullName: newUser.fullName,
         email: newUser.email,
-        role: newUser.role, // Include role in the response
+        role: newUser.role,
         profilePic: newUser.profilePic,
       });
     } else {
       res.status(400).json({ message: "Invalid user data" });
     }
   } catch (error) {
-    console.log("Error in signup controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error in signup controller:", error);
+    res.status(500).json({ message: "Internal Server Error", error: process.env.NODE_ENV === 'development' ? error.message : undefined });
   }
 };
 
 export const login = async (req, res) => {
   const { email, password } = req.body;
   try {
-    const user = await User.findOne({ email });
+    // Normalize email to lowercase for case-insensitive comparison
+    const normalizedEmail = email?.toLowerCase().trim();
+    
+    if (!normalizedEmail || !password) {
+      return res.status(400).json({ message: "Email and password are required" });
+    }
+
+    console.log("Login attempt for email:", normalizedEmail);
+    
+    // Find user with case-insensitive email
+    const user = await User.findOne({ email: { $regex: new RegExp(`^${normalizedEmail}$`, 'i') } });
 
     if (!user) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.log("User not found for email:", normalizedEmail);
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    console.log("User found:", user.email, "Role:", user.role);
+
+    // Check if password is correct
     const isPasswordCorrect = await bcrypt.compare(password, user.password);
+    
     if (!isPasswordCorrect) {
-      return res.status(400).json({ message: "Invalid credentials" });
+      console.log("Password incorrect for user:", user.email);
+      return res.status(400).json({ message: "Invalid email or password" });
     }
 
+    console.log("Password verified. Generating token for user:", user.email);
+
+    // Generate JWT token
     generateToken(user._id, res);
 
-    res.status(200).json({
+    const userResponse = {
       _id: user._id,
       fullName: user.fullName,
       email: user.email,
       role: user.role,
       profilePic: user.profilePic,
       createdAt: user.createdAt
-    });
+    };
+
+    console.log("Login successful for user:", user.email);
+
+    res.status(200).json(userResponse);
   } catch (error) {
-    console.log("Error in login controller", error.message);
-    res.status(500).json({ message: "Internal Server Error" });
+    console.error("Error in login controller:", error);
+    console.error("Error stack:", error.stack);
+    res.status(500).json({ message: "Internal Server Error", error: process.env.NODE_ENV === 'development' ? error.message : undefined });
   }
 };
 
 export const logout = (req, res) => {
   try {
-    res.cookie("jwt", "", { maxAge: 0 });
+    console.log("Logout called, clearing JWT cookie");
+    
+    // Clear the JWT cookie by setting it to empty with maxAge 0
+    res.cookie("jwt", "", { 
+      maxAge: 0,
+      httpOnly: true,
+      sameSite: "strict",
+      secure: process.env.NODE_ENV !== "development",
+    });
+    
+    console.log("JWT cookie cleared");
     res.status(200).json({ message: "Logged out successfully" });
   } catch (error) {
-    console.log("Error in logout controller", error.message);
+    console.error("Error in logout controller:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };
@@ -126,9 +170,23 @@ export const updateProfile = async (req, res) => {
 
 export const checkAuth = (req, res) => {
   try {
-    res.status(200).json(req.user);
+    if (!req.user) {
+      console.log("checkAuth: No user in request");
+      return res.status(401).json({ message: "Not authenticated" });
+    }
+    
+    console.log("checkAuth: User authenticated:", req.user.email, "ID:", req.user._id);
+    
+    res.status(200).json({
+      _id: req.user._id,
+      fullName: req.user.fullName,
+      email: req.user.email,
+      role: req.user.role,
+      profilePic: req.user.profilePic,
+      createdAt: req.user.createdAt
+    });
   } catch (error) {
-    console.log("Error in checkAuth controller", error.message);
+    console.error("Error in checkAuth controller:", error);
     res.status(500).json({ message: "Internal Server Error" });
   }
 };

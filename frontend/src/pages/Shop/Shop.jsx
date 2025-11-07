@@ -3,10 +3,11 @@ import { expertData, chatExperts, fieldVisitExperts } from "../../assets/dummySt
 import { productsService } from "../../lib/productsService";
 import ExpertCard from "../../components/ExpertCard";
 import { useNavigate, useLocation } from "react-router-dom";
+import toast, { Toaster } from "react-hot-toast"; // ✅ 1. Import toast
 
 const ITEMS_PER_PAGE = 12;
 
-// Helper function to get image with fallback
+
 const getImage = (item) => {
   if (item.profileImage) return item.profileImage;
   if (item.imageUrl) return item.imageUrl;
@@ -34,6 +35,8 @@ export default function Shop() {
         setToolsAndEquipment(products);
       } catch (error) {
         console.error("Error fetching products:", error);
+        // ✅ 3. Show an error toast to the user
+        toast.error("Failed to load products. Please try again.");
         setToolsAndEquipment([]);
       } finally {
         setLoading(false);
@@ -88,6 +91,9 @@ export default function Shop() {
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-emerald-50 to-teal-50 pt-20">
+      {/* ✅ 2. Add the Toaster component */}
+      <Toaster position="top-center" />
+      
       {/* Hero Section */}
       <section className="relative py-16 px-4 bg-white overflow-hidden">
         <div className="max-w-4xl mx-auto text-center mb-8">

@@ -39,16 +39,31 @@ export const useAuthStore = create((set, get) => ({
     
     try {
       const res = await axiosInstance.get("/auth/check");
-      set({ authUser: res.data, hasCheckedAuth: true });
-      console.log("Authentication successful:", res.data);
-      get().connectSocket(); // Connect to the socket if authenticated
+      
+      console.log("Auth check response:", res.data);
+      console.log("Authenticated user:", res.data?.email, "ID:", res.data?._id);
+      
+      // Update user data from backend (in case it changed)
+      if (res.data) {
+        // Store in localStorage
+        localStorage.setItem('authUser', JSON.stringify(res.data));
+        set({ authUser: res.data, hasCheckedAuth: true });
+        console.log("Authentication successful, user stored:", res.data.email);
+        get().connectSocket(); // Connect to the socket if authenticated
+      } else {
+        // No user data returned
+        localStorage.removeItem('authUser');
+        set({ authUser: null, hasCheckedAuth: true });
+        console.log("No user data in auth check response");
+      }
     } catch (error) {
       console.error("Error in checkAuth:", error);
-      // Only set authUser to null if it's not already null
-      if (get().authUser !== null) {
-        set({ authUser: null });
-      }
-      set({ hasCheckedAuth: true });
+      console.error("Auth check failed, clearing user data");
+      
+      // Clear all auth data on error
+      localStorage.removeItem('authUser');
+      set({ authUser: null, hasCheckedAuth: true });
+      
       // Only show the error toast if it's not a 401 Unauthorized error
       if (error.response?.status !== 401) {
         toast.error("Authentication failed. Please log in again.");
@@ -78,21 +93,54 @@ export const useAuthStore = create((set, get) => ({
   login: async (data, expectedRole) => {
     set({ isLoggingIn: true });
     try {
-      const res = await axiosInstance.post("/auth/login", data);
+      console.log("Login attempt with email:", data.email);
       
-      // Check if the user's role matches the expected role
+      // IMPORTANT: Clear old session data before new login
+      // This ensures old cookies/tokens don't interfere
+      localStorage.removeItem('authUser');
+      set({ authUser: null });
+      set({ hasCheckedAuth: false }); // Reset auth check flag
+      
+      // Normalize email input
+      const normalizedData = {
+        ...data,
+        email: data.email?.toLowerCase().trim()
+      };
+      
+      const res = await axiosInstance.post("/auth/login", normalizedData);
+      
+      console.log("Login response received:", res.data);
+      console.log("Logged in user:", res.data.email, "ID:", res.data._id);
+      
+      // Check if the user's role matches the expected role (only if expectedRole is provided)
       if (expectedRole && res.data.role !== expectedRole) {
+        console.error("Role mismatch:", res.data.role, "expected:", expectedRole);
         throw new Error(`Please use the ${expectedRole} login form`);
       }
       
       // Store the user data in localStorage for persistence
       localStorage.setItem('authUser', JSON.stringify(res.data));
+      
       // Update the auth state
       set({ authUser: res.data });
+      set({ hasCheckedAuth: true }); // Mark as checked
+      
+      // Connect socket
       get().connectSocket();
+      
+      console.log("Login successful, user stored:", res.data.email);
+      console.log("Current authUser state:", get().authUser);
+      
       return res.data; // Return the user data for the component to use
     } catch (error) {
       console.error("Login error:", error);
+      console.error("Error response:", error.response?.data);
+      
+      // Clear localStorage on login failure
+      localStorage.removeItem('authUser');
+      set({ authUser: null });
+      set({ hasCheckedAuth: false });
+      
       throw error; // Rethrow the error for the component to handle
     } finally {
       set({ isLoggingIn: false });
@@ -108,13 +156,31 @@ export const useAuthStore = create((set, get) => ({
   // Logout function
   logout: async (navigate) => {
     try {
+      console.log("Logging out user:", get().authUser?.email);
+      
+      // Clear backend session (cookie)
       await axiosInstance.post("/auth/logout");
+      
+      // Clear frontend state
+      localStorage.removeItem('authUser');
       set({ authUser: null });
+      set({ hasCheckedAuth: false }); // Reset auth check flag
+      
+      // Disconnect socket
       get().disconnectSocket();
+      
+      console.log("Logout successful, user cleared");
+      
       toast.success("Logged out successfully");
       if (navigate) navigate("/login"); // Redirect to login page
     } catch (error) {
       console.error("Logout error:", error);
+      
+      // Even if backend logout fails, clear frontend state
+      localStorage.removeItem('authUser');
+      set({ authUser: null });
+      set({ hasCheckedAuth: false });
+      
       toast.error(error.response?.data?.message || "Logout failed");
     }
   },

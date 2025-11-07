@@ -52,13 +52,30 @@ const EquipmentDetail = () => {
 
   // Add to Cart handler
   const handleAddToCart = async () => {
+    if (!equipment || !equipment._id) {
+      alert('Invalid product information. Please try again.');
+      return;
+    }
+
     setAddToCartLoading(true);
     try {
-      await productsService.addToCart(equipment._id);
-      // Optionally show a success message here
+      console.log('Adding product to cart:', equipment._id);
+      const result = await productsService.addToCart(equipment._id);
+      // Dispatch event to update Header cart count
+      window.dispatchEvent(new Event('cartUpdated'));
+      alert('Product added to cart successfully!');
+      console.log('Add to cart success:', result);
+      
+      // Navigate back to shop page with Tools & Equipment section selected
+      navigate('/shop', { state: { selectedType: 'tools' } });
     } catch (error) {
+      console.error('Error adding to cart:', error);
+      console.error('Error response:', error.response?.data);
+      
       if (error.message === 'You must be logged in to add items to your cart.') {
         alert('Please log in to add items to your cart.');
+      } else if (error.response?.data?.message) {
+        alert(error.response.data.message);
       } else {
         alert('Failed to add to cart. Please try again.');
       }

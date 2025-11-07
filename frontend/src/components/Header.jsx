@@ -57,6 +57,17 @@ const Header = () => {
     };
 
     fetchCartItems();
+    
+    // Listen for cart update events
+    const handleCartUpdate = () => {
+      fetchCartItems();
+    };
+    
+    window.addEventListener('cartUpdated', handleCartUpdate);
+    
+    return () => {
+      window.removeEventListener('cartUpdated', handleCartUpdate);
+    };
   }, [authUser]);
 
   const handleUserClick = () => {
@@ -88,11 +99,22 @@ const Header = () => {
     return location.pathname === path;
   };
 
-  // Calculate total items in cart (distinct items)
-  const cartItemCount = cartItems.length;
+  // Calculate total items in cart (total quantity of all items)
+  const cartItemCount = cartItems.reduce((total, item) => {
+    // Handle both old structure (item.quantity) and new structure (item.quantity from cart array)
+    const quantity = item.quantity || 1;
+    return total + quantity;
+  }, 0);
 
-  // Calculate total price
-  const totalPrice = cartItems.reduce((total, item) => total + (item.price * (item.quantity || 1)), 0);
+  // Calculate total price - handle both old and new cart structures
+  const totalPrice = cartItems.reduce((total, item) => {
+    // New structure: item has productId object with price
+    if (item.productId && typeof item.productId === 'object' && item.productId.price) {
+      return total + (item.productId.price * (item.quantity || 1));
+    }
+    // Old structure: item has price directly
+    return total + ((item.price || 0) * (item.quantity || 1));
+  }, 0);
 
   // Format price
   const formatPrice = (price) => {
@@ -393,22 +415,31 @@ const Header = () => {
                 <>
                   {/* Items List */}
                   <div className="space-y-3 mb-4">
-                    {cartItems.map((item, index) => (
-                      <div key={index} className="flex justify-between items-center border-b border-gray-100 pb-2">
-                        <div className="flex items-center space-x-3">
-                          <img 
-                            src={item.image || Basket} 
-                            alt={item.name} 
-                            className="w-12 h-12 object-cover rounded"
-                          />
-                          <div>
-                            <h4 className="font-medium text-gray-800">{item.name}</h4>
-                            <p className="text-sm text-gray-500">Qty: {item.quantity || 1}</p>
+                    {cartItems.map((item, index) => {
+                      // Handle both old structure (item.name, item.price) and new structure (item.productId)
+                      const productName = item.productId?.name || item.name || 'Unknown Product';
+                      const productPrice = item.productId?.price || item.price || 0;
+                      const productImage = item.productId?.imageUrl || item.image || Basket;
+                      const quantity = item.quantity || 1;
+                      
+                      return (
+                        <div key={item.productId?._id || item._id || index} className="flex justify-between items-center border-b border-gray-100 pb-2">
+                          <div className="flex items-center space-x-3">
+                            <img 
+                              src={productImage} 
+                              alt={productName} 
+                              className="w-12 h-12 object-cover rounded"
+                              onError={(e) => { e.target.src = Basket; }}
+                            />
+                            <div>
+                              <h4 className="font-medium text-gray-800">{productName}</h4>
+                              <p className="text-sm text-gray-500">Qty: {quantity}</p>
+                            </div>
                           </div>
+                          <p className="font-medium text-gray-800">{formatPrice(productPrice * quantity)}</p>
                         </div>
-                        <p className="font-medium text-gray-800">{formatPrice(item.price * (item.quantity || 1))}</p>
-                      </div>
-                    ))}
+                      );
+                    })}
                   </div>
                   
                   {/* Order Summary */}

@@ -13,7 +13,7 @@ export const productsService = {
       return response.data.products || [];
     } catch (error) {
       console.error('Error fetching products:', error);
-      return [];
+      return [];x
     }
   },
 
@@ -32,6 +32,11 @@ export const productsService = {
   // Add a product to the cart
   async addToCart(productId) {
     console.log("addToCart called", productId);
+    
+    if (!productId) {
+      throw new Error('Product ID is required');
+    }
+
     try {
       const response = await axiosInstance.post('/cart', { productId });
       return response.data;
@@ -40,6 +45,7 @@ export const productsService = {
         throw new Error('You must be logged in to add items to your cart.');
       }
       console.error('Error adding to cart:', error);
+      console.error('Error response data:', error.response?.data);
       throw error;
     }
   },
