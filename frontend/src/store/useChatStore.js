@@ -52,36 +52,49 @@ export const useChatStore = create((set, get) => ({
   },
 
   subscribeToMessages: () => {
-    const { selectedUser } = get();
-    if (!selectedUser) return;
-  
     const socket = useAuthStore.getState().socket;
-  
-    // Unsubscribe from previous listeners to avoid duplicates
-    socket.off("newMessage");
-  
-    const subscribe = () => {
-      socket.on("newMessage", (newMessage) => {
-        const isMessageSentFromSelectedUser = newMessage.senderId === selectedUser._id;
-        if (!isMessageSentFromSelectedUser) return;
-  
-        set({
-          messages: [...get().messages, newMessage],
-        });
-      });
+    const { selectedUser } = get();
+
+    if (!socket || !selectedUser) return;
+
+    const handleNewMessage = (newMessage) => {
+      const currentSelectedUser = get().selectedUser;
+      if (!currentSelectedUser) return;
+
+      const isFromSelectedUser =
+        newMessage.senderId === currentSelectedUser._id ||
+        newMessage.receiverId === currentSelectedUser._id;
+
+      if (!isFromSelectedUser) return;
+
+      const existingMessages = get().messages;
+      const alreadyExists = existingMessages.some(
+        (message) => message._id === newMessage._id
+      );
+      if (alreadyExists) return;
+
+      set({ messages: [...existingMessages, newMessage] });
     };
-  
-    // Subscribe initially
-    subscribe();
-  
-    // Re-subscribe on reconnect
-    socket.on("connect", subscribe);
+
+    const handleReconnect = () => {
+      const currentSelectedUser = get().selectedUser;
+      if (currentSelectedUser?._id) {
+        get().getMessages(currentSelectedUser._id);
+      }
+    };
+
+    socket.off("newMessage", handleNewMessage);
+    socket.off("connect", handleReconnect);
+
+    socket.on("newMessage", handleNewMessage);
+    socket.on("connect", handleReconnect);
   },
 
   unsubscribeFromMessages: () => {
     const socket = useAuthStore.getState().socket;
+    if (!socket) return;
     socket.off("newMessage");
-    socket.off("connect"); // Remove the reconnect listener
+    socket.off("connect");
   },
 
   setSelectedUser: (selectedUser) => set({ selectedUser }),

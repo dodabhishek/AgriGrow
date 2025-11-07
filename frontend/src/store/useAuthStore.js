@@ -208,20 +208,70 @@ export const useAuthStore = create((set, get) => ({
     const { authUser } = get();
     if (!authUser || get().socket?.connected) return;
 
-    const socket = io(BASE_URL, {
+    const socketBaseUrl = import.meta.env.PROD
+      ? window.location.origin
+      : (import.meta.env.VITE_SOCKET_URL || BASE_URL);
+
+    const socket = io(socketBaseUrl, {
+      path: "/socket.io",
       query: {
         userId: authUser._id,
       },
+      transports: ["websocket", "polling"],
+      reconnection: true,
+      reconnectionAttempts: 5,
+      reconnectionDelay: 1000,
+      reconnectionDelayMax: 5000,
+      timeout: 20000,
+      autoConnect: true,
+      withCredentials: true,
     });
-    socket.connect();
 
-    set({ socket });
+    socket.on("connect", () => {
+      console.log(
+        "Socket connected",
+        socket.id,
+        "transport:",
+        socket.io.engine.transport.name
+      );
+    });
+
+    socket.io.engine.on("upgrade", () => {
+      console.log("Socket upgraded to:", socket.io.engine.transport.name);
+    });
+
+    socket.on("connect_error", (err) => {
+      console.error("Socket connect error:", err.message);
+    });
+
+    socket.on("reconnect", (attempt) => {
+      console.log("Socket reconnected after", attempt, "attempts");
+    });
+
+    socket.on("reconnect_attempt", (attempt) => {
+      console.log("Socket reconnect attempt", attempt);
+    });
+
+    socket.on("reconnect_error", (err) => {
+      console.error("Socket reconnect error:", err.message);
+    });
+
+    socket.on("reconnect_failed", () => {
+      console.error("Socket reconnection failed");
+    });
+
+    socket.on("disconnect", (reason) => {
+      console.log("Socket disconnected:", reason);
+      if (reason === "io server disconnect") {
+        socket.connect();
+      }
+    });
 
     socket.on("getOnlineUsers", (userIds) => {
       set({ onlineUsers: userIds });
     });
 
-    console.log("Socket connected");
+    set({ socket });
   },
 
   // Disconnect from the socket
